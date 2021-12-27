@@ -35,4 +35,3 @@ output "alb_dns_name" {
 output "ecs_exec_role" {
   value = module.iam.iam_role_task_execution_arn
 }
-
