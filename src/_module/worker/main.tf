@@ -23,13 +23,12 @@ data "template_file" "container_definitions" {
 # ===================================================================
 resource "aws_ecs_task_definition" "main" {
   family = "${var.app_name}-${var.entry_container_name}"
-
   cpu                      = 256
   memory                   = 512
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
 
-  container_definitions = data.template_file.container_definitions.rendered
+  container_definitions    = data.template_file.container_definitions.rendered
 
   volume {
     name = "app-storage"
@@ -44,19 +43,14 @@ resource "aws_ecs_task_definition" "main" {
 # ===================================================================
 resource "aws_ecs_service" "main" {
   #   depends_on = [aws_lb_listener_rule.main]
-
   name                   = "${var.app_name}-${var.entry_container_name}"
   enable_execute_command = true
-
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
-
   desired_count = 1
-
   cluster = var.cluster
 
   task_definition = aws_ecs_task_definition.main.arn
-
   # GitHubActionsと整合性を取りたい場合は下記のようにrevisionを指定しなければよい
   # task_definition = "arn:aws:ecs:ap-northeast-1:${local.account_id}:task-definition/${aws_ecs_task_definition.main.family}"
 
@@ -77,9 +71,18 @@ resource "aws_ecs_service" "main" {
 }
 
 # ===================================================================
-# cloud watch event (定時処理)
+# Log
 # ===================================================================
+resource "aws_cloudwatch_log_group" "main" {
+  name              = "/${var.app_name}/worker"
+  retention_in_days = 7
+}
+
+# ===================================================================
+# cloud watch event (定時処理)
 # Task Schedule
+# ===================================================================
+
 resource "aws_cloudwatch_event_rule" "schedule" {
   description         = "run php artisan schedule every minutes"
   is_enabled          = true
