@@ -79,6 +79,14 @@ resource "aws_ecs_service" "main" {
 # ===================================================================
 # cloud watch event (定時処理)
 # ===================================================================
+# Task Schedule
+resource "aws_cloudwatch_event_rule" "schedule" {
+  description         = "run php artisan schedule every minutes"
+  is_enabled          = true
+  name                = "schedule_every_minutes"
+  schedule_expression = "cron(* * * * ? *)"
+}
+
 data "template_file" "php_artisan_schedule" {
   template = file(abspath("./worker/ecs_container_overrides.json"))
 
