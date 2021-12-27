@@ -1,9 +1,13 @@
-# usage
-# cp .env.examp .env.dev
-# input env value .env.dev
-# sh aws.sh .env.dev app_name
+#! /bin/bash
+set -euC
 
-APP_NAME=$2
+# set environment value into aws ssm parameter store.
+# usage
+# cp .env.example .env.dev
+# input env value .env.dev
+# sh aws.s  app_name .env.dev
+
+APP_NAME=$1
 # initialize raw count
 line_no=1
 
@@ -21,6 +25,6 @@ do
 
   line_no=`expr $line_no + 1`
 
-done <$1
+done <$2
 
 exit 0
