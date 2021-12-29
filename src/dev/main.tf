@@ -15,6 +15,19 @@ module "network" {
 }
 
 # ========================================================
+# SecurityGroup
+# ========================================================
+module "security_group" {
+  source               = "../_module/security_group"
+  app_name             = var.APP_NAME
+  vpc_cidr             = m.vpc_cidr
+  vpc_id               = module.network.vpc_id
+  private_route_table  = module.network.route_table_private
+  private_subnet       = module.network.private_subnet_ids
+  private_subnet_cidrs = var.private_subnet_cidrs
+}
+
+# ========================================================
 # EC2 (vpc_id, subnet_id が必要)
 #
 # ========================================================
@@ -94,9 +107,15 @@ module "worker_ecs" {
   cluster              = module.ecs_cluster.cluster_name
   cluster_arn          = module.ecs_cluster.cluster_arn
   # target_group_arn               = module.elb.aws_lb_target_group
-  iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn
+  iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
 
 #  service_registries_arn = module.cloudmap.cloudmap_internal_Arn
+  sg = [
+    module.security_group.http_sg_id,
+    module.security_group.endpoint_sg_id,
+    module.security_group.redis_ecs_sg_id,
+    module.security_group.ses_ecs_sg_id
+  ]
 }
 
 

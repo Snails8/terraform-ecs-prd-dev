@@ -5,7 +5,7 @@ variable "cluster" {
   description = "ECS Cluster"
   type        = string
 }
-variable "aws_iam_role_task_exection_arn" {
+variable "iam_role_task_exection_arn" {
   description = "ECS Task execution IAM role arn"
   type        = string
 }
