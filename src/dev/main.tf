@@ -81,6 +81,26 @@ module "iam" {
 }
 
 # ========================================================
+# worker 環境
+# ========================================================
+module "worker_ecs" {
+  source = "../_module/ecs/worker"
+  app_name = "${var.APP_NAME}-worker"
+  vpc_id               = module.network.vpc_id
+  placement_subnet     = module.network.private_subnet_ids
+  entry_container_name = "worker"
+  entry_container_port = 6379
+
+  cluster              = module.ecs_cluster.cluster_name
+  cluster_arn          = module.ecs_cluster.cluster_arn
+  # target_group_arn               = module.elb.aws_lb_target_group
+  iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn
+
+#  service_registries_arn = module.cloudmap.cloudmap_internal_Arn
+}
+
+
+# ========================================================
 # RDS 作成
 #
 # [subnetGroup, securityGroup, RDS instance(postgreSQL)]
