@@ -38,10 +38,6 @@ variable "entry_container_port" {
   type        = number
   description = "Entrypoint container port number ex:nginx or worker port is expected"
 }
-variable "service_registries_arn" {
-  type        = string
-  description = "Service Registry arn used for alignment containers"
-}
 
 # cloudwatch eventで使用
 variable "cluster_arn" {
@@ -51,3 +47,9 @@ variable "cluster_arn" {
 variable "vpc_id" {
   type = string
 }
+
+# cloudmap しかし規模的に規模的に効果を見込めなかったので修正
+#variable "service_registries_arn" {
+#  type        = string
+#  description = "Service Registry arn used for alignment containers"
+#}
