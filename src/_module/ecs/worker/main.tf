@@ -65,9 +65,11 @@ resource "aws_ecs_service" "main" {
   #     container_name   = var.entry_container_name
   #     container_port   = var.entry_container_port
   #   }
-  service_registries {
-    registry_arn = var.service_registries_arn
-  }
+
+  # cloudmap を使うほどではなかったので一旦コメントアウト
+#  service_registries {
+#    registry_arn = var.service_registries_arn
+#  }
 }
 
 # ===================================================================

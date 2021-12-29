@@ -118,6 +118,12 @@ module "worker_ecs" {
   ]
 }
 
+# 試験的に導入
+#module "cloudmap" {
+#  source = "../_module/cloudmap"
+#  app_name = var.APP_NAME
+#  vpc_id   = module.network.vpc_id
+#}
 
 # ========================================================
 # RDS 作成
