@@ -1,27 +1,3 @@
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-
-locals {
-  app_name   = var.app_name
-  account_id = data.aws_caller_identity.current.account_id
-  region     = data.aws_region.current.name
-}
-
-# コンテナ定義を呼び出す
-data "template_file" "container_definitions" {
-  template = file("./ecs/app/container_definitions.json")
-
-  vars = {
-    tag        = "latest"
-    name       = var.app_name
-    account_id = local.account_id
-    region     = local.region
-    app_key    = var.app_key
-    loki_user  = var.loki_user
-    loki_pass  = var.loki_pass
-  }
-}
-
 # =========================================================
 # Task Definition
 # =========================================================
@@ -73,7 +49,7 @@ resource "aws_ecs_service" "main" {
 
   network_configuration {
     subnets         = var.private_subnet_ids
-    security_groups = [aws_security_group.ecs.id]
+    security_groups = var.sg_list
     assign_public_ip = true
   }
   
@@ -82,39 +58,6 @@ resource "aws_ecs_service" "main" {
     container_name   = "nginx"
     container_port   = 80
   }
-}
-
-# Security Group
-resource "aws_security_group" "ecs" {
-  name = "${var.app_name}-ecs"
-  description = "${var.app_name}-ecs"
-
-  vpc_id = var.vpc_id
-
-  # セキュリティグループ内のリソースからインターネットへのアクセス許可設定(docker-hubのpullに使用
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.app_name}-ecs"
-  }
-}
-
-# Security Group Rule(ingress: インターネットからセキュリティグループ内のリソースへのアクセス許可設定)
-resource "aws_security_group_rule" "ecs" {
-  security_group_id = aws_security_group.ecs.id
-
-  type = "ingress"
-
-  from_port = 80
-  to_port   = 80
-  protocol  = "tcp"
-  # 同一VPC内からのアクセスのみ許可
-  cidr_blocks = ["0.0.0.0/16"]
 }
 
 # =========================================================

@@ -1,20 +1,3 @@
-# CI/CD で使用 (無駄な使用を避けるためあえてコメントアウトしている)
-#terraform {
-#  backend "s3" {
-#    bucket = "バケット名を指定"
-#    key    = "terraform.tfstate"
-#    region = "ap-northeast-1"
-#
-#  }
-#  required_providers {
-#    aws = {
-#      source  = "hashicorp/aws"
-#      version = "~> 3.27"
-#    }
-#  }
-#  required_version = ">= 0.14.9"
-#}
-
 # provider の設定 ( provider は aws 専用ではなくGCPとかも使える)
 provider "aws" {
   region = "ap-northeast-1"
@@ -26,9 +9,22 @@ provider "aws" {
 # VPC, subnet(pub, pri), IGW, RouteTable, Route, RouteTableAssociation
 # ========================================================
 module "network" {
-  source = "./network"
-  app_name = var.app_name
+  source = "../_module/network"
+  app_name = var.APP_NAME
   azs = var.azs
+}
+
+# ========================================================
+# SecurityGroup
+# ========================================================
+module "security_group" {
+  source               = "../_module/security_group"
+  app_name             = var.APP_NAME
+  vpc_cidr             = m.vpc_cidr
+  vpc_id               = module.network.vpc_id
+  private_route_table  = module.network.route_table_private
+  private_subnet       = module.network.private_subnet_ids
+  private_subnet_cidrs = var.private_subnet_cidrs
 }
 
 # ========================================================
@@ -36,8 +32,8 @@ module "network" {
 #
 # ========================================================
 module "ec2" {
-  source = "./ec2"
-  app_name = var.app_name
+  source = "../_module/ec2"
+  app_name = var.APP_NAME
   vpc_id    = module.network.vpc_id
   subnet_id = module.network.ec2_subnet_id
 }
@@ -48,8 +44,8 @@ module "ec2" {
 # ECS(service, cluster elb
 # ========================================================
 module "ecs" {
-  source = "./ecs/app"
-  app_name = var.app_name
+  source = "../_module/ecs/app"
+  app_name = var.APP_NAME
   vpc_id   = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
 
@@ -62,40 +58,78 @@ module "ecs" {
 
   loki_user = var.LOKI_USER
   loki_pass = var.LOKI_PASS
+
+  sg_list = [
+    #    module.security_group.http_security_group_id,   <- ALBの設定
+    module.security_group.ecs_sg_id,
+    #    module.security_group.redis_ecs_security_group_id   <- redis
+  ]
 }
 
 # cluster 作成
 module "ecs_cluster" {
-  source   = "./ecs/cluster"
-  app_name = var.app_name
+  source   = "../_module/ecs/cluster"
+  app_name = var.APP_NAME
 }
 
 # ACM 発行
 module "acm" {
-  source   = "./acm"
-  app_name = var.app_name
-  zone     = var.zone
-  domain   = var.domain
+  source   = "../_module/acm"
+  app_name = var.APP_NAME
+  zone     = var.ZONE
+  domain   = var.DOMAIN
 }
 
 # ELB の設定
 module "elb" {
-  source            = "./elb"
-  app_name          = var.app_name
+  source            = "../_module/elb"
+  app_name          = var.APP_NAME
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
 
-  domain = var.domain
-  zone   = var.zone
+  domain = var.DOMAIN
+  zone   = var.ZONE
   acm_id = module.acm.acm_id 
 }
 
 # IAM 設定
 # ECS-Agentが使用するIAMロール や タスク(=コンテナ)に付与するIAMロール の定義
 module "iam" {
-  source = "./iam"
-  app_name = var.app_name
+  source = "../_module/iam"
+  app_name = var.APP_NAME
 }
+
+# ========================================================
+# worker 環境
+# ========================================================
+module "worker_ecs" {
+  source = "../_module/ecs/worker"
+  app_name = "${var.APP_NAME}-worker"
+  vpc_id               = module.network.vpc_id
+  placement_subnet     = module.network.private_subnet_ids
+  entry_container_name = "worker"
+  entry_container_port = 6379
+
+  cluster              = module.ecs_cluster.cluster_name
+  cluster_arn          = module.ecs_cluster.cluster_arn
+  # target_group_arn               = module.elb.aws_lb_target_group
+  iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
+
+#  service_registries_arn = module.cloudmap.cloudmap_internal_Arn
+  sg = [
+    module.security_group.http_sg_id,
+    module.security_group.endpoint_sg_id,
+    module.security_group.redis_ecs_sg_id,
+    module.security_group.ses_ecs_sg_id
+  ]
+}
+
+# 試験的に導入
+#module "cloudmap" {
+#  source = "../_module/cloudmap"
+#  app_name = var.APP_NAME
+#  vpc_id   = module.network.vpc_id
+#}
 
 # ========================================================
 # RDS 作成
@@ -104,9 +138,9 @@ module "iam" {
 # ========================================================
 # RDS (PostgreSQL)
 module "rds" {
-  source = "./rds"
+  source = "../_module/rds"
 
-  app_name = var.app_name
+  app_name = var.APP_NAME
   vpc_id   = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
 
@@ -120,8 +154,8 @@ module "rds" {
 #
 # ========================================================
 module "elasticache" {
-  source = "./elasticache"
-  app_name = var.app_name
+  source = "../_module/elasticache"
+  app_name = var.APP_NAME
   vpc_id = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
 }
@@ -131,7 +165,7 @@ module "elasticache" {
 # メール送信に使用
 # ========================================================
 module "ses" {
-  source = "./ses"
-  domain = var.domain
-  zone   = var.zone
+  source = "../_module/ses"
+  domain = var.DOMAIN
+  zone   = var.ZONE
 }

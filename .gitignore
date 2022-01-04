@@ -2,6 +2,8 @@
 .idea
 
 .env
+.env.production
+.env.github
 
 # Terraform
 .terraform
@@ -11,4 +13,4 @@
 .terraform.tfstate.lock.info
 
 # EC2 ssh-key
-ec2/sample-ec2-key.pub
+src/_module/ec2/sample-ec2-key.pub
