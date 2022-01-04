@@ -20,10 +20,10 @@ module "network" {
 module "security_group" {
   source               = "../_module/security_group"
   app_name             = var.APP_NAME
-  vpc_cidr             = m.vpc_cidr
+  vpc_cidr             = var.vpc_cidr
   vpc_id               = module.network.vpc_id
   private_route_table  = module.network.route_table_private
-  private_subnet       = module.network.private_subnet_ids
+  private_subnets      = module.network.private_subnet_ids
   private_subnet_cidrs = var.private_subnet_cidrs
 }
 

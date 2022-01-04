@@ -22,7 +22,7 @@ output "public_subnet_ids" {
   value = aws_subnet.publics.*.id
 }
 
-# sg で使用
+# sg(VPC endpoint) で使用
 output "route_table_private" {
-  value = aws_route.private
+  value = aws_route.private[*]
 }
