@@ -51,7 +51,7 @@ module "ecs" {
 
   cluster_name = module.ecs_cluster.cluster_name
   # elb の設定
-  target_group_arn = module.elb.aws_lb_target_group
+  target_group_arn               = module.elb.aws_lb_target_group
   # ECS のtask に関連付けるIAM の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn
   app_key = var.APP_KEY
@@ -60,9 +60,9 @@ module "ecs" {
   loki_pass = var.LOKI_PASS
 
   sg_list = [
-    #    module.security_group.http_security_group_id,   <- ALBの設定
+    module.security_group.alb_sg_id,  # ALBの設定
     module.security_group.ecs_sg_id,
-    #    module.security_group.redis_ecs_security_group_id   <- redis
+    module.security_group.redis_ecs_sg_id  # redis
   ]
 }
 
@@ -86,10 +86,11 @@ module "elb" {
   app_name          = var.APP_NAME
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
+  alb_sg            = module.security_group.alb_sg_id
 
   domain = var.DOMAIN
   zone   = var.ZONE
-  acm_id = module.acm.acm_id 
+  acm_id = module.acm.acm_id
 }
 
 # IAM 設定
@@ -133,8 +134,6 @@ module "worker_ecs" {
 
 # ========================================================
 # RDS 作成
-#
-# [subnetGroup, securityGroup, RDS instance(postgreSQL)]
 # ========================================================
 # RDS (PostgreSQL)
 module "rds" {
@@ -153,7 +152,7 @@ module "rds" {
 # Elasticache (Redis)
 # ========================================================
 module "elasticache" {
-  source = "./elasticache"
+  source = "../_module/elasticache"
   app_name = var.APP_NAME
   vpc_id = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
