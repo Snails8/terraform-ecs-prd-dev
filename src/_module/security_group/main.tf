@@ -46,28 +46,6 @@ resource "aws_security_group" "ecs_endpoint" {
 }
 
 # worker で使用
-resource "aws_security_group" "redis_ecs" {
-  name        = "${var.app_name}-redis_ecs"
-  description = "${var.app_name}-redis_ecs"
-  egress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
-  }
-  ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
-  }
-  vpc_id = var.vpc_id
-  tags = {
-    Name = "${var.app_name}-redis_ecs"
-  }
-}
-
-# worker で使用
 resource "aws_security_group" "ses_ecs" {
   name   = "allow_ses"
   vpc_id = var.vpc_id
