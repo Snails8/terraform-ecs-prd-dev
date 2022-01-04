@@ -3,9 +3,9 @@ output "http_sg_id" {
   value = aws_security_group.http.id
 }
 
-# worker で使用
-output "endpoint_sg_id" {
-  value = aws_security_group.ecs_endpoint.id
+# ecs で使用
+output "ecs_sg_id" {
+  value = aws_security_group.ecs.id
 }
 
 # worker で使用

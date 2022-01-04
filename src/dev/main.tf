@@ -58,6 +58,12 @@ module "ecs" {
 
   loki_user = var.LOKI_USER
   loki_pass = var.LOKI_PASS
+
+  sg_list = [
+    #    module.security_group.http_security_group_id,   <- ALBの設定
+    module.security_group.ecs_sg_id,
+    #    module.security_group.redis_ecs_security_group_id   <- redis
+  ]
 }
 
 # cluster 作成
