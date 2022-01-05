@@ -15,7 +15,7 @@ output "redis_hostname" {
 
 # SECURITY_GROUPに該当
 output "db_security_groups" {
-  value = module.rds.db_security_group
+  value = module.security_group.db_sg_id
 }
 
 output "aws_vpc" {

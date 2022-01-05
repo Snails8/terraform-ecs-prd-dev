@@ -3,15 +3,24 @@
 # $ make plan-(dev or prod or etc.)
 # $ make apply-(dev or prod or etc.)
 include .env
+SRC := $1
+ROOT := src
+SCOPE := ${ROOT}/${SRC}
+CD = [[ -d $(SCOPE) ]] && cd $(SCOPE)
 
 DC := docker-compose exec terraform
 ENV_PROD := .env.production
 ENV_GITHUB := .env.github
 
-SCOPE := src
-CD = [[ -d $(SCOPE) ]] && cd $(SCOPE)
+TF_STATE_BUCKET := tfstate-${APP_NAME}-${SRC}
+TR_INIT_OPTION := -reconfigure -reconfigure -backend-config="bucket=${TF_STATE_BUCKET}"  \
+           -backend-config="key=terraform.tfstate.${SRC}" \
+          -backend-config="region=ap-northeast-1"
 
-.PHONY: all init
+s3_tfbackend:
+	  # S3 bucket作成 versioning機能追加
+		aws s3 mb s3://${TF_STATE_BUCKET}&& \
+		aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET} --versioning-configuration Status=Enabled
 
 up:
 	docker-compose up -d --build
@@ -22,39 +31,37 @@ ecr-repo:
 	aws ecr create-repository --repository-name $(TF_VAR_APP_NAME)-nginx
 
 ssm-store:
-	sh ssm-put.sh $(TF_VAR_APP_NAME) .env.production && \
-	sh ssm-put.sh $(TF_VAR_APP_NAME) .env
+	sh ./setting/bin/ssm-put.sh $(TF_VAR_APP_NAME) .env.production && \
+	sh ./setting/bin/ssm-put.sh $(TF_VAR_APP_NAME) .env
 
 all:
 	@more Makefile
 
-init-%:
-	@[[ -d $(SCOPE)/${@:init-%=%} ]] && \
-	cd $(SCOPE)/${@:init-%=%}  && \
-	DC terraform init
+init:
+	@${CD} && \
+	${DC} terraform init ${TR_INIT_OPTION}
 
-plan-%:
-	@[[ -d $(SCOPE)/${@:plan-%=%} ]] && \
-	cd $(SCOPE)/${@:plan-%=%}  && \
-	DC terraform plan
+plan:
+	@${CD} && \
+	${DC} terraform plan
 
-migrate-%:
-	@[[ -d $(SCOPE)/${@:migrate-%=%} ]] && \
-	cd $(SCOPE)/${@:migrate-%=%}  && \
-	DC terraform init -migrate-state
+migrate:
+	@${CD} && \
+	${DC} terraform init -migrate-state ${TR_INIT_OPTION}
 
-apply-%:
-	@[[ -d $(SCOPE)/${@:apply-%=%} ]] && \
-	cd $(SCOPE)/${@:apply-%=%}  && \
-	DC terraform apply
+apply:
+	@${CD} && \
+	${DC} terraform init ${TR_INIT_OPTION} && \
+	${DC} terraform apply
 
-destroy-%:
-	@[[ -d $(SCOPE)/${@:destroy-%=%} ]] && \
-	cd $(SCOPE)/${@:destroy-%=%}  && \
-	DC terraform destroy
+destroy:
+	@${CD} && \
+	${DC} terraform destroy
 
+# SSM / Github SECRETに登録する値の用意
 outputs:
-	@${DC} terraform output -json | ${DC} jq -r '"DB_HOST=\(.db_endpoint.value)"'  > $(ENV_PROD)  && \
+	@${CD} && \
+	${DC} terraform output -json |  ${DC} jq -r '"DB_HOST=\(.db_endpoint.value)"'  > $(ENV_PROD)  && \
 	${DC} terraform output -json |  ${DC} jq -r '"REDIS_HOST=\(.redis_hostname.value[0].address)"' >> $(ENV_PROD)  && \
 	${DC} terraform output -json |  ${DC} jq -r '"SUBNETS=\(.db_subnets.value)"' > $(ENV_GITHUB) && \
     ${DC} terraform output -json |  ${DC} jq -r '"SECURITY_GROUPS=\(.db_security_groups.value)"' >> $(ENV_GITHUB)

@@ -1,28 +1,9 @@
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-locals {
-  account_id = data.aws_caller_identity.current.account_id
-  region     = data.aws_region.current.name
-}
-
-data "template_file" "container_definitions" {
-  template = file(abspath("./worker/worker_container_definitions.json"))
-  # templateのjsonファイルに値を渡す
-  vars = {
-    tag                  = "latest"
-    name                 = var.app_name
-    entry_container_name = var.entry_container_name
-    entry_container_port = 6379
-    account_id           = local.account_id
-    region               = local.region
-  }
-}
-
 # ===================================================================
 # タスク定義
 # ===================================================================
 resource "aws_ecs_task_definition" "main" {
-  family = "${var.app_name}-${var.entry_container_name}"
+  family = "${var.app_name}-worker"
+
   cpu                      = 256
   memory                   = 512
   network_mode             = "awsvpc"
@@ -43,12 +24,13 @@ resource "aws_ecs_task_definition" "main" {
 # ===================================================================
 resource "aws_ecs_service" "main" {
   #   depends_on = [aws_lb_listener_rule.main]
-  name                   = "${var.app_name}-${var.entry_container_name}"
+  name                   = "${var.app_name}-worker"
   enable_execute_command = true
+
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
-  desired_count = 1
-  cluster = var.cluster
+  desired_count    = 1
+  cluster          = var.cluster
 
   task_definition = aws_ecs_task_definition.main.arn
   # GitHubActionsと整合性を取りたい場合は下記のようにrevisionを指定しなければよい
@@ -56,20 +38,16 @@ resource "aws_ecs_service" "main" {
 
   network_configuration {
     subnets          = var.placement_subnet
-    security_groups  = var.sg
+    security_groups  = var.sg_list
     assign_public_ip = true
   }
 
-  #   load_balancer {
-  #     target_group_arn = var.target_group_arn
-  #     container_name   = var.entry_container_name
-  #     container_port   = var.entry_container_port
-  #   }
-
+  # lb の設定は不要
   # cloudmap を使うほどではなかったので一旦コメントアウト
 #  service_registries {
 #    registry_arn = var.service_registries_arn
 #  }
+
 }
 
 # ===================================================================
@@ -78,44 +56,6 @@ resource "aws_ecs_service" "main" {
 resource "aws_cloudwatch_log_group" "main" {
   name              = "/${var.app_name}/worker"
   retention_in_days = 7
-}
-
-# ===================================================================
-# cloud watch event (定時処理)
-# Task Schedule
-# ===================================================================
-
-resource "aws_cloudwatch_event_rule" "schedule" {
-  description         = "run php artisan schedule every minutes"
-  is_enabled          = true
-  name                = "schedule_every_minutes"
-  schedule_expression = "cron(* * * * ? *)"
-}
-
-data "template_file" "php_artisan_schedule" {
-  template = file(abspath("./worker/ecs_container_overrides.json"))
-
-  vars = {
-    command = "schedule:run"
-    # option  = "--tries=1"
-  }
-}
-
-resource "aws_cloudwatch_event_target" "schedule" {
-  rule      = aws_cloudwatch_event_rule.schedule.name
-  arn       = var.cluster_arn
-  target_id = "schedule"
-  role_arn  = aws_iam_role.ecs_events_run_task.arn
-  input     = data.template_file.php_artisan_schedule.rendered
-  ecs_target {
-    launch_type         = "FARGATE"
-    task_count          = 1
-    task_definition_arn = replace(aws_ecs_task_definition.main.arn, "/:[0-9]+$/", "")
-    network_configuration {
-      security_groups = var.sg
-      subnets         = var.placement_subnet
-    }
-  }
 }
 
 # ===================================================================
