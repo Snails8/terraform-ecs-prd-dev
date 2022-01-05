@@ -1,9 +1,13 @@
 name: dev-apply
 
+# 枠が無駄になってしまうのでコメントアウトして、手動環境にしている
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+#   push:
+#     branches:
+#     - main
+#   pull_request:
+
 env:
   # please set your own app name corresponding with application name.
   # APP_NAME: ${{ github.event.repository.name }}
