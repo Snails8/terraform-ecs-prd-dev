@@ -24,7 +24,6 @@ module "security_group" {
   vpc_id               = module.network.vpc_id
   private_route_table  = module.network.route_table_private
   private_subnets      = module.network.private_subnet_ids
-  private_subnet_cidrs = var.private_subnet_cidrs
 }
 
 # ========================================================
@@ -35,7 +34,8 @@ module "ec2" {
   source = "../_module/ec2"
   app_name = var.APP_NAME
   vpc_id    = module.network.vpc_id
-  subnet_id = module.network.ec2_subnet_id
+  public_subnet_id = module.network.public_subnet_ids[0]
+  ssh_sg_id        = module.security_group.ssh_sg_id
 }
 
 # ========================================================

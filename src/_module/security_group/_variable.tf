@@ -11,15 +11,14 @@ variable "vpc_cidr" {
   type = string
 }
 
-# vpc_endpoint で使用
 variable "private_route_table" {
   type = list(any)
 }
-
+#
 variable "private_subnets" {
   type = list(string)
 }
 
-variable "private_subnet_cidrs" {
-  type = list(string)
-}
+#variable "private_subnet_cidrs" {
+#  type = list(string)
+#}
