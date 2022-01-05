@@ -3,6 +3,7 @@ name: dev-apply
 on:
   push:
     branches:
+      - dev
 #      - develop
       #- staging
 env:
