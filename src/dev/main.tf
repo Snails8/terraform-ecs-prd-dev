@@ -28,7 +28,6 @@ module "security_group" {
 
 # ========================================================
 # EC2 (vpc_id, subnet_id が必要)
-#
 # ========================================================
 module "ec2" {
   source = "../_module/ec2"
@@ -72,7 +71,9 @@ module "ecs_cluster" {
   app_name = var.APP_NAME
 }
 
+# ==========================================================
 # ACM 発行
+# ==========================================================
 module "acm" {
   source   = "../_module/acm"
   app_name = var.APP_NAME
@@ -80,7 +81,9 @@ module "acm" {
   domain   = var.DOMAIN
 }
 
+# ==========================================================
 # ELB の設定
+# ==========================================================
 module "elb" {
   source            = "../_module/elb"
   app_name          = var.APP_NAME
@@ -93,8 +96,10 @@ module "elb" {
   acm_id = module.acm.acm_id
 }
 
+# ==========================================================
 # IAM 設定
-# ECS-Agentが使用するIAMロール や タスク(=コンテナ)に付与するIAMロール の定義
+# ECS-Agentが使用するIAMロール や タスク(=コンテナ)に付与するIAMロール の定義\
+# ==========================================================
 module "iam" {
   source = "../_module/iam"
   app_name = var.APP_NAME
@@ -103,26 +108,24 @@ module "iam" {
 # ========================================================
 # worker 環境
 # ========================================================
-module "worker_ecs" {
+module "ecs_worker" {
   source = "../_module/ecs/worker"
-  app_name = "${var.APP_NAME}-worker"
-  vpc_id               = module.network.vpc_id
-  placement_subnet     = module.network.private_subnet_ids
-  entry_container_name = "worker"
-  entry_container_port = 6379
-
+  # task_definition_file_path      = "../module/ecs/container_definitions.json"
+  app_name             = var.APP_NAME
   cluster              = module.ecs_cluster.cluster_name
-  cluster_arn          = module.ecs_cluster.cluster_arn
-  # target_group_arn               = module.elb.aws_lb_target_group
+  placement_subnet     = module.network.private_subnet_ids
+  # target_group_arn               = module.alb.aws_lb_target_group
   iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
-
-#  service_registries_arn = module.cloudmap.cloudmap_internal_Arn
-  sg = [
+  sg_list = [
     module.security_group.http_sg_id,
-    module.security_group.endpoint_sg_id,
+    module.security_group.ecs_sg_id,
     module.security_group.redis_ecs_sg_id,
     module.security_group.ses_ecs_sg_id
   ]
+
+  # service_registries_arn = module.cloudmap.cloudmap_internal_Arn
+  vpc_id                 = module.network.vpc_id
+  cluster_arn            = module.ecs_cluster.cluster_arn
 }
 
 # 試験的に導入

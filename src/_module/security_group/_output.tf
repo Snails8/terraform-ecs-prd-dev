@@ -1,9 +1,14 @@
-# ECSで使用
+# Worker で使用
+output "http_sg_id" {
+  value = aws_security_group.http.id
+}
+
+# ECS / Worker で使用
 output "ecs_sg_id" {
   value = aws_security_group.ecs.id
 }
 
-# redis で使用
+# redis / Worker で使用
 output "redis_ecs_sg_id" {
   value = aws_security_group.redis_ecs.id
 }
@@ -21,4 +26,9 @@ output "db_sg_id" {
 # ec2の設定で使用
 output "ssh_sg_id" {
   value = aws_security_group.ssh.id
+}
+
+# worker で使用
+output "ses_ecs_sg_id" {
+  value = aws_security_group.ses_ecs.id
 }
