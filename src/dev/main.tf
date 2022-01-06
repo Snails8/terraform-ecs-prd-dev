@@ -64,6 +64,7 @@ module "ecs" {
     module.security_group.redis_ecs_sg_id  # redis
   ]
 }
+# Frontend
 
 # cluster 作成
 module "ecs_cluster" {
