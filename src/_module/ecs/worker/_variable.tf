@@ -40,7 +40,8 @@ locals {
 }
 
 data "template_file" "container_definitions" {
-  template = file(abspath("./worker/worker_container_definitions.json"))
+  template = file("../_module/ecs/app/container_definitions.json")
+
   # templateのjsonファイルに値を渡す
   vars = {
     tag                  = "latest"
