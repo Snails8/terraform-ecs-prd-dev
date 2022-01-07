@@ -3,12 +3,8 @@
     "name": "frontend",
     "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}-frontend:${tag}",
     "command": [
-      "web",
-      "npx",
-      "next",
-      "start",
-      "-p",
-      "${port}"
+      "yarn",
+      "start"
     ],
     "portMappings": [
       {
