@@ -48,7 +48,7 @@ locals {
 
 # コンテナ定義を呼び出す
 data "template_file" "container_definitions" {
-  template = file("../_module/ecs/app/container_definitions.json")
+  template = file("../_module/ecs/frontend/container_definitions.json")
 
   vars = {
     tag        = "latest"
