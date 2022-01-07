@@ -1,8 +1,6 @@
-# todo:: domain とzone 見直し
-
 # variable
 locals {
-  app_name ="${var.APP_NAME}-frontend"
+  app_name = "next-spa"
 }
 
 # ==========================================================
