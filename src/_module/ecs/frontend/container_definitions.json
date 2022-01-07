@@ -2,6 +2,14 @@
   {
     "name": "frontend",
     "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}-frontend:${tag}",
+    "command": [
+      "web",
+      "npx",
+      "next",
+      "start",
+      "-p",
+      "${port}"
+    ],
     "portMappings": [
       {
         "containerPort": "${port}",
@@ -19,12 +27,6 @@
     "linuxParameters": {
       "initProcessEnabled": true
     },
-    "mountPoints": [
-      {
-        "sourceVolume": "app-storage",
-        "containerPath": "/app"
-      }
-    ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {

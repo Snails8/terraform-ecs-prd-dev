@@ -25,8 +25,8 @@ module "front_elb" {
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg            = module.security_group.alb_sg_id
 
-  domain = var.DOMAIN
-  zone   = var.ZONE
+  domain = "subdomain.snails8d"
+  zone   = "subdomain.snails8d"
   acm_id = module.acm.acm_id
 }
 
