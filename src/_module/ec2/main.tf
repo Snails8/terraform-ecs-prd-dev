@@ -63,7 +63,7 @@ data "aws_ami" "recent_amazon_linux2" {
 
 resource "aws_instance" "main" {
   ami           = data.aws_ami.recent_amazon_linux2.image_id
-  instance_type = "t3.nano"  # freeでいきたい場合 t2.micro
+  instance_type = var.instance_type  # freeでいきたい場合 t2.micro
   key_name      = aws_key_pair.main.id
   subnet_id     = var.public_subnet_id
   vpc_security_group_ids = [var.ssh_sg_id]

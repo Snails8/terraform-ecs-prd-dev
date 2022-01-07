@@ -13,3 +13,7 @@ variable "public_subnet_id" {
 variable "ssh_sg_id" {
   type = string
 }
+
+variable "instance_type" {
+  type = string
+}
