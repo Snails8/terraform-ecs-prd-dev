@@ -2,6 +2,8 @@
 # frontの　ALB に付与
 
 # user からのアクセスを受け付けてコンテナに流す
+# image
+# user (80, 443, 3000) -> alb -> 3000 -> container
 # =====================================================
 resource "aws_security_group" "frontend" {
   name        = "${var.app_name}-alb-frontend"
@@ -34,7 +36,8 @@ resource "aws_security_group_rule" "http_frontend_80" {
 
   cidr_blocks = ["0.0.0.0/0"]
 }
-# user から80, 443 でくる通信を受け取る
+
+# user から3000 でくる通信を受け取る
 resource "aws_security_group_rule" "http_frontend_3000" {
   security_group_id = aws_security_group.frontend.id
 
@@ -47,6 +50,7 @@ resource "aws_security_group_rule" "http_frontend_3000" {
 
   cidr_blocks = ["0.0.0.0/0"]
 }
+
 # ALB用セキュリティグループへhttpsも受け付けるようルールを追加する
 resource "aws_security_group_rule" "https_frontend_443" {
   security_group_id = aws_security_group.frontend.id
