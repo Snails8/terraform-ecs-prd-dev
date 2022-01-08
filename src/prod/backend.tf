@@ -44,7 +44,7 @@ module "ec2" {
 # ECS(service, cluster elb
 # ========================================================
 module "ecs" {
-  source = "../_module/ecs/app"
+  source = "../_module/ecs/laravel_backend/app"
   app_name = var.APP_NAME
   vpc_id   = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
@@ -111,7 +111,7 @@ module "iam" {
 # worker 環境
 # ========================================================
 module "ecs_worker" {
-  source = "../_module/ecs/worker"
+  source = "../_module/ecs/laravel_backend/worker"
   # task_definition_file_path      = "../module/ecs/container_definitions.json"
   app_name             = var.APP_NAME
   cluster              = module.ecs_cluster.cluster_name

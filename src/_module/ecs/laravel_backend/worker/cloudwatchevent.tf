@@ -7,7 +7,7 @@
 # ===================================================================
 # app側のcommand実行
 data "template_file" "php_artisan_schedule" {
-  template = file("../_module/ecs/worker/ecs_container_overrides.json")
+  template = file("../_module/ecs/laravel_backend/worker/ecs_container_overrides.json")
 
   vars = {
     command = "schedule:run"

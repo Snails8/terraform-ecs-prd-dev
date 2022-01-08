@@ -4,14 +4,12 @@ provider "aws" {
 }
 
 # ========================================================
-# Network 作成
-#
-# VPC, subnet(pub, pri), IGW, RouteTable, Route, RouteTableAssociation
+# Network 作成   (VPC, subnet(pub, pri), IGW, RouteTable, Route, RouteTableAssociation)
 # ========================================================
 module "network" {
-  source = "../_module/network"
+  source    = "../_module/network"
   app_name = var.APP_NAME
-  azs = var.azs
+  azs      = var.azs
 }
 
 # ========================================================
@@ -38,41 +36,6 @@ module "ec2" {
   instance_type    = "t3.nano"
 }
 
-# ========================================================
-# ECS 作成
-#
-# ECS(service, cluster elb
-# ========================================================
-module "ecs" {
-  source = "../_module/ecs/app"
-  app_name = var.APP_NAME
-  vpc_id   = module.network.vpc_id
-  private_subnet_ids = module.network.private_subnet_ids
-
-  cluster_name = module.ecs_cluster.cluster_name
-  # elb の設定
-  target_group_arn               = module.elb.aws_lb_target_group
-  # ECS のtask に関連付けるIAM の設定
-  iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn
-  app_key = var.APP_KEY
-
-  loki_user = var.LOKI_USER
-  loki_pass = var.LOKI_PASS
-
-  sg_list = [
-    module.security_group.alb_http_sg_id,  # ALBの設定
-    module.security_group.ecs_sg_id,
-    module.security_group.redis_ecs_sg_id  # redis
-  ]
-}
-# Frontend
-
-# cluster 作成
-module "ecs_cluster" {
-  source   = "../_module/ecs/cluster"
-  app_name = var.APP_NAME
-}
-
 # ==========================================================
 # ACM 発行
 # ==========================================================
@@ -81,6 +44,15 @@ module "acm" {
   app_name = var.APP_NAME
   zone     = var.ZONE
   domain   = var.DOMAIN
+}
+
+# ==========================================================
+# IAM 設定
+# ECS-Agentが使用するIAMロール や タスク(=コンテナ)に付与するIAMロール の定義\
+# ==========================================================
+module "iam" {
+  source   = "../_module/iam"
+  app_name = var.APP_NAME
 }
 
 # ==========================================================
@@ -99,25 +71,50 @@ module "elb" {
 }
 
 # ==========================================================
-# IAM 設定
-# ECS-Agentが使用するIAMロール や タスク(=コンテナ)に付与するIAMロール の定義\
+# cluster (一つのクラスター(箱)の中にserviceを複数 作成する
 # ==========================================================
-module "iam" {
-  source = "../_module/iam"
+module "ecs_cluster" {
+  source   = "../_module/ecs/cluster"
   app_name = var.APP_NAME
+}
+
+# ========================================================
+# ECS 作成
+# ========================================================
+module "ecs" {
+  source             = "../_module/ecs/laravel_backend/app"
+  app_name           = var.APP_NAME
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+
+  cluster_name                = module.ecs_cluster.cluster_name
+  target_group_arn            = module.elb.aws_lb_target_group           # elb の設定
+  iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn   # ECS のtask に関連付けるIAM の設定
+  app_key                     = var.APP_KEY
+
+  loki_user = var.LOKI_USER
+  loki_pass = var.LOKI_PASS
+
+  sg_list = [
+    module.security_group.alb_http_sg_id,  # ALBの設定
+    module.security_group.ecs_sg_id,
+    module.security_group.redis_ecs_sg_id  # redis
+  ]
 }
 
 # ========================================================
 # worker 環境
 # ========================================================
 module "ecs_worker" {
-  source = "../_module/ecs/worker"
-  # task_definition_file_path      = "../module/ecs/container_definitions.json"
+  source               = "../_module/ecs/laravel_backend/worker"
   app_name             = var.APP_NAME
-  cluster              = module.ecs_cluster.cluster_name
+  vpc_id               = module.network.vpc_id
   placement_subnet     = module.network.private_subnet_ids
-  # target_group_arn               = module.alb.aws_lb_target_group
+
+  cluster              = module.ecs_cluster.cluster_name
+  cluster_arn          = module.ecs_cluster.cluster_arn
   iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
+
   sg_list = [
     module.security_group.alb_http_sg_id,
     module.security_group.ecs_sg_id,
@@ -126,26 +123,16 @@ module "ecs_worker" {
   ]
 
   # service_registries_arn = module.cloudmap.cloudmap_internal_Arn
-  vpc_id                 = module.network.vpc_id
-  cluster_arn            = module.ecs_cluster.cluster_arn
 }
 
-# 試験的に導入
-#module "cloudmap" {
-#  source = "../_module/cloudmap"
-#  app_name = var.APP_NAME
-#  vpc_id   = module.network.vpc_id
-#}
-
-# ========================================================
-# RDS 作成
 # ========================================================
 # RDS (PostgreSQL)
+# ========================================================
 module "rds" {
   source = "../_module/rds"
 
-  app_name = var.APP_NAME
-  vpc_id   = module.network.vpc_id
+  app_name           = var.APP_NAME
+  vpc_id             = module.network.vpc_id
   db_sg_id           = module.security_group.db_sg_id
   private_subnet_ids = module.network.private_subnet_ids
 
@@ -158,9 +145,9 @@ module "rds" {
 # Elasticache (Redis)
 # ========================================================
 module "elasticache" {
-  source = "../_module/elasticache"
-  app_name = var.APP_NAME
-  vpc_id = module.network.vpc_id
+  source             = "../_module/elasticache"
+  app_name           = var.APP_NAME
+  vpc_id             = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
   redis_sg_id        = module.security_group.redis_ecs_sg_id
 }
@@ -174,3 +161,13 @@ module "ses" {
   domain = var.DOMAIN
   zone   = var.ZONE
 }
+
+# ========================================================
+# Cloud Map試験的に導入
+# API コール、DNSクエリを介してリソースを検出できる
+# ========================================================
+# module "cloudmap" {
+#  source = "../_module/cloudmap"
+#  app_name = var.APP_NAME
+#  vpc_id   = module.network.vpc_id
+#}

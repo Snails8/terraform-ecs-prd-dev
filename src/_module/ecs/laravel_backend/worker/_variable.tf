@@ -23,15 +23,6 @@ variable "sg_list" {
   type        = list(string)
 }
 
-# variable "target_group_arn" {
-#   type = string
-# }
-
-# variable "task_definition_file_path" {
-#   type        = string
-#   description = "absosule path container definition file ex:../../module/ecs/container_definitions.json"
-# }
-
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 locals {
@@ -40,7 +31,7 @@ locals {
 }
 
 data "template_file" "container_definitions" {
-  template = file("../_module/ecs/app/container_definitions.json")
+  template = file("../_module/ecs/laravel_backend/app/container_definitions.json")
 
   # templateのjsonファイルに値を渡す
   vars = {

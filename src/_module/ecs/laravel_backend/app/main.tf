@@ -66,6 +66,6 @@ resource "aws_ecs_service" "main" {
 # Logの設定自体はjson。あくまでwebとappの出力先を指定
 # =========================================================
 resource "aws_cloudwatch_log_group" "main" {
-  name              = "/${local.app_name}/ecs"
+  name              = "/${var.app_name}/ecs"
   retention_in_days = 7
 }
