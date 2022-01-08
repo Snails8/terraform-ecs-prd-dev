@@ -6,9 +6,9 @@ resource "aws_ecs_task_definition" "frontend" {
 
   # データプレーンの選択
   requires_compatibilities = ["FARGATE"]
-  network_mode = "awsvpc"  # ECSタスクのネットワークドライバ  :Fargateを使用する場合は"awsvpc"
-  cpu          = 256  # ECSタスクが使用可能なリソースの上限 (タスク内のコンテナはこの上限内に使用するリソースを収める必要があり、メモリが上限に達した場合OOM Killer にタスクがキルされる
-  memory       = 512
+  network_mode             = "awsvpc"  # ECSタスクのネットワークドライバ  :Fargateを使用する場合は"awsvpc"
+  cpu                      = 256  # ECSタスクが使用可能なリソースの上限 (タスク内のコンテナはこの上限内に使用するリソースを収める必要があり、メモリが上限に達した場合OOM Killer にタスクがキルされる
+  memory                   = 512
 
   # 起動するコンテナの定義 (nginx, app)
   container_definitions = data.template_file.container_definitions.rendered
@@ -28,14 +28,14 @@ resource "aws_ecs_task_definition" "frontend" {
 # ========================================================
 resource "aws_ecs_service" "frontend" {
   # depends_on = [aws_lb_listener_rule.frontend]
-  name    =  "${var.app_name}-frontend"
-  cluster = var.cluster_name   # clusterの指定
+  name                   = "${var.app_name}-frontend"
+  cluster                = var.cluster_name   # clusterの指定
+  enable_execute_command = true               # SSMの有効化
 
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
-  # 以下の値を task の数を設定しないと、serviceの内のタスクが0になり動作しない。
-  desired_count = 1
+  desired_count                     = 1  # task の数を設定しないと、serviceの内のタスクが0になり動作しないので明示する
   health_check_grace_period_seconds = 15
 
   # task_definition = aws_ecs_task_definition.frontend.arn
@@ -50,8 +50,8 @@ resource "aws_ecs_service" "frontend" {
 
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "nginx"
-    container_port   = 80
+    container_name   = var.app_name
+    container_port   = var.port   # frontendのtaskポートに合わせる必要あり。
   }
 
   # cloudmapで使用

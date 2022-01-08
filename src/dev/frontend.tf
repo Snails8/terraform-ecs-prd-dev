@@ -62,7 +62,7 @@ module "front_ecs" {
   target_group_arn            = module.elb.aws_lb_target_group
   # ECS のtask に関連付けるIAM の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn
-  port = 3000  # task定義にまたすすport
+  port = 3000  # task定義とECSのALB設定に渡すport
 
   sg_list = [
     module.security_group.alb_sg_id,  # ALBの設定

@@ -55,7 +55,6 @@ data "template_file" "container_definitions" {
     name       = var.app_name
     account_id = local.account_id
     region     = local.region
-    #frontendのポート番号
-    port       = var.port
+    port       = var.port     #frontendのポート番号
   }
 }

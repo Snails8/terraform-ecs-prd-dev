@@ -1,15 +1,17 @@
 [
   {
-    "name": "frontend",
-    "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}-frontend:${tag}",
+    "name": "${name}",
+    "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}:${tag}",
     "command": [
       "yarn",
       "start"
     ],
+    "cpu": 256,
+    "memory": 512,
+    "network_mode": "awsvpc",
     "portMappings": [
       {
-        "containerPort": "${port}",
-        "hostPort": "${port}",
+        "containerPort": 3000,
         "protocol": "tcp"
       }
     ],
@@ -34,7 +36,7 @@
     "environment": [
       {
         "name": "PORT",
-        "value": 80
+        "value": "80"
       }
     ]
   }
