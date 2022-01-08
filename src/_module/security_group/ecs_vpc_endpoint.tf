@@ -66,7 +66,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_subnets
-  security_group_ids  = [aws_security_group.ecs.id]
+  security_group_ids  = [aws_security_group.ecs_endpoint.id]
   private_dns_enabled = true
   tags = {
     "Name" = "${var.app_name}-private-ECR_DKR"
@@ -78,7 +78,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name        = "com.amazonaws.ap-northeast-1.ecr.api"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_subnets
-  security_group_ids  = [aws_security_group.ecs.id]
+  security_group_ids  = [aws_security_group.ecs_endpoint.id]
   private_dns_enabled = true
   tags = {
     "Name" = "${var.app_name}-private-ECR_API"
@@ -90,7 +90,7 @@ resource "aws_vpc_endpoint" "logs" {
   service_name        = "com.amazonaws.ap-northeast-1.logs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_subnets
-  security_group_ids  = [aws_security_group.ecs.id]
+  security_group_ids  = [aws_security_group.ecs_endpoint.id]
   private_dns_enabled = true
   tags = {
     "Name" = "${var.app_name}-private-logs"
@@ -102,7 +102,7 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name        = "com.amazonaws.ap-northeast-1.ssm"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_subnets
-  security_group_ids  = [aws_security_group.ecs.id]
+  security_group_ids  = [aws_security_group.ecs_endpoint.id]
   private_dns_enabled = true
   tags = {
     "Name" = "${var.app_name}-private-ssm"
@@ -113,7 +113,7 @@ resource "aws_vpc_endpoint" "ses" {
   service_name        = "com.amazonaws.ap-northeast-1.qldb.session"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_subnets
-  security_group_ids  = [aws_security_group.ecs.id]
+  security_group_ids  = [aws_security_group.ecs_endpoint.id]
   private_dns_enabled = true
   tags = {
     "Name" = "${var.app_name}-private-ses"

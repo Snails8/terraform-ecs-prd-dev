@@ -8,14 +8,6 @@ resource "aws_security_group" "alb_http" {
   description = "${var.app_name}-alb"
   vpc_id      = var.vpc_id
 
-  # セキュリティグループ内のリソースからインターネットへのアクセスを許可する
-  egress {
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${var.app_name}-alb"
   }

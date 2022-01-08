@@ -1,6 +1,6 @@
 # ========================================================
 # SecurityGroup
-# name, description, vpc_id, Rule, egress,
+
 # terraform での作成の場合、GUIでは自動で設定してくれるアウトバウンドを設定する必要がある(GUIの default は有効)
 # outbound 機器から外部に出力されるパケットをエグレス 上り
 # -1 にすればterraform側で勝手に オールにする https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#egress
