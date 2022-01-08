@@ -5,7 +5,7 @@ output "http_sg_id" {
 
 # ECS / Worker で使用
 output "ecs_sg_id" {
-  value = aws_security_group.ecs.id
+  value = aws_security_group.ecs_endpoint.id
 }
 
 # redis / Worker で使用
