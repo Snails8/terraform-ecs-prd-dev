@@ -63,7 +63,7 @@ data "aws_ami" "recent_amazon_linux2" {
 
 resource "aws_instance" "main" {
   ami           = data.aws_ami.recent_amazon_linux2.image_id
-  instance_type = "t3.nano"  # freeでいきたい場合 t2.micro
+  instance_type = var.instance_type  # freeでいきたい場合 t2.micro
   key_name      = aws_key_pair.main.id
   subnet_id     = var.public_subnet_id
   vpc_security_group_ids = [var.ssh_sg_id]
@@ -94,7 +94,7 @@ resource "aws_instance" "main" {
 # ==================================================================
 resource "aws_key_pair" "main" {
   key_name   = "${var.app_name}-ec2-key"
-  public_key = file("./ec2/ec2-key.pub")
+  public_key = file("../_module/ec2/ec2-key.pub")
 }
 
 # EIP (ElasticIP)

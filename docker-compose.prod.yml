@@ -1,4 +1,3 @@
-# こいつが無いとdocker立ち上げができない
 version: '3'
 services:
   terraform:
@@ -10,6 +9,6 @@ services:
       - .env
     volumes:
       - .:/terraform
-    working_dir: /terraform/src/dev
+    working_dir: /terraform/src/prod
     entrypoint: ash
     tty: true

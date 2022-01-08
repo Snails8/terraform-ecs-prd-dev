@@ -1,4 +1,3 @@
-# こいつが無いとdocker立ち上げができない
 version: '3'
 services:
   terraform:

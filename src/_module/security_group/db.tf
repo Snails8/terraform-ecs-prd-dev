@@ -18,7 +18,7 @@ resource "aws_security_group" "db" {
 
 # inbound (cidrs は環境に応じて変更してください。)
 resource "aws_security_group_rule" "pgsql" {
-  security_group_id = aws_security_group.main.id
+  security_group_id = aws_security_group.db.id
 
   type = "ingress"
 

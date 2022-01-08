@@ -50,14 +50,13 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
 locals {
-  app_name   = var.app_name
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
 }
 
 # コンテナ定義を呼び出す
 data "template_file" "container_definitions" {
-  template = file("./ecs/app/container_definitions.json")
+  template = file("../_module/ecs/laravel_backend/app/container_definitions.json")
 
   vars = {
     tag        = "latest"
