@@ -1,6 +1,6 @@
-# Worker で使用
-output "http_sg_id" {
-  value = aws_security_group.http.id
+# ALB / ECS / Worker で使用
+output "alb_http_sg_id" {
+  value = aws_security_group.alb_http.id
 }
 
 # ECS / Worker で使用
@@ -11,11 +11,6 @@ output "ecs_sg_id" {
 # redis / Worker で使用
 output "redis_ecs_sg_id" {
   value = aws_security_group.redis_ecs.id
-}
-
-# ALB / ECSでも使用
-output "alb_sg_id" {
-  value = aws_security_group.main.id
 }
 
 # RDS で使用
