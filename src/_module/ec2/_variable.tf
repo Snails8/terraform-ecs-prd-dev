@@ -17,3 +17,8 @@ variable "ssh_sg_id" {
 variable "instance_type" {
   type = string
 }
+
+# 環境ごとに参照先を変える
+variable "ec2_key_file_path" {
+  type = string
+}

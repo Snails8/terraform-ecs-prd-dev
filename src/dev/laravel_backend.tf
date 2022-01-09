@@ -28,12 +28,14 @@ module "security_group" {
 # EC2 (vpc_id, subnet_id が必要)
 # ========================================================
 module "ec2" {
-  source = "../_module/ec2"
-  app_name = var.APP_NAME
-  vpc_id    = module.network.vpc_id
-  public_subnet_id = module.network.public_subnet_ids[0]
-  ssh_sg_id        = module.security_group.ssh_sg_id
-  instance_type    = "t3.nano"
+  source             = "../_module/ec2"
+  app_name           = var.APP_NAME
+  vpc_id             = module.network.vpc_id
+  public_subnet_id   = module.network.public_subnet_ids[0]
+
+  ssh_sg_id          = module.security_group.ssh_sg_id
+  instance_type      = "t3.nano"
+  ec2_key_file_path  = "../dev/ec2-key.pub"
 }
 
 # ==========================================================
