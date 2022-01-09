@@ -13,4 +13,5 @@
 .terraform.tfstate.lock.info
 
 # EC2 ssh-key
-src/_module/ec2/ec2-key.pub
+src/dev/ec2-key.pub
+src/prod/ec2-key.pub
