@@ -32,19 +32,19 @@ variable "cluster_name" {
   type = string
 }
 
-#  Log
-variable "loki_user" {
-  type = string
-}
-
-variable "loki_pass" {
-  type = string
-}
-
 # タスクに関連付けるIAM
 variable "iam_role_task_execution_arn" {
   type = string
 }
+
+#  grafana 使うほどではない
+#variable "loki_user" {
+#  type = string
+#}
+#
+#variable "loki_pass" {
+#  type = string
+#}
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
@@ -64,7 +64,7 @@ data "template_file" "container_definitions" {
     account_id = local.account_id
     region     = local.region
     app_key    = var.app_key
-    loki_user  = var.loki_user
-    loki_pass  = var.loki_pass
+#    loki_user  = var.loki_user
+#    loki_pass  = var.loki_pass
   }
 }

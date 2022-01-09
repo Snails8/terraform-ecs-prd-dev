@@ -92,8 +92,8 @@ module "ecs" {
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn   # ECS のtask に関連付けるIAM の設定
   app_key                     = var.APP_KEY
 
-  loki_user = var.LOKI_USER
-  loki_pass = var.LOKI_PASS
+#  loki_user = var.LOKI_USER    使うほどではない
+#  loki_pass = var.LOKI_PASS    使うほどではない
 
   sg_list = [
     module.security_group.alb_http_sg_id,  # ALBの設定

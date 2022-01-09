@@ -26,14 +26,6 @@ variable "APP_KEY" {
   type = string
 }
 
-variable "LOKI_USER" {
-  type = string
-}
-
-variable "LOKI_PASS" {
-  type = string
-}
-
 # RDS で使用
 variable "DB_NAME" {
   type = string
