@@ -16,7 +16,7 @@ module "network" {
 # SecurityGroup
 # ========================================================
 module "security_group" {
-  source               = "../_module/security_group"
+  source               = "../_module/security_group/laravel_backend"
   app_name             = var.APP_NAME
   vpc_cidr             = var.vpc_cidr
   vpc_id               = module.network.vpc_id
