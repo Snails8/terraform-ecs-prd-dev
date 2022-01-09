@@ -37,6 +37,10 @@ module "front_elb" {
 module "front_iam" {
   source   = "../_module/iam"
   app_name = local.app_name
+
+  # GithubのOICDで使用  TODO::重複しているのでコメントアウト
+#  system      = local.app_name
+#  github_repo = "Snails8d/next-spa"
 }
 
 # ==========================================================

@@ -57,6 +57,13 @@ module "iam" {
   app_name = var.APP_NAME
 }
 
+# GithubのOICDで使用
+module "github_iam" {
+  source = "../_module/iam/github_oicd"
+  system      = var.APP_NAME
+  github_repo = "Snails8d/laravel-api"
+}
+
 # ==========================================================
 # ELB の設定
 # ==========================================================

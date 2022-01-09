@@ -36,3 +36,7 @@ output "ecs_exec_role" {
   value = module.iam.iam_role_task_execution_arn
 }
 
+# GitHub OIDCで使用
+output "github_arn" {
+  value = module.github_iam.github_role.arn
+}
