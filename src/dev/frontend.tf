@@ -1,6 +1,6 @@
 # variable
 locals {
-  app_name = "next-spa"
+  app_name = "housebokan-admin-rea"
 
   domain = "sub.snails8.site"
   zone   = "sub.snails8.site"
