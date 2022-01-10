@@ -87,7 +87,7 @@ module "acm" {
 # ELB の設定
 # ==========================================================
 module "elb" {
-  source            = "../_module/elb"
+  source            = "../_module/alb"
   app_name          = var.APP_NAME
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids

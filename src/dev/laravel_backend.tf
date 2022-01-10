@@ -59,7 +59,7 @@ module "iam" {
 
 # GithubのOICDで使用
 module "github_iam" {
-  source = "../_module/iam/github_oicd"
+  source = "../_module/iam/github_oidc"
   system      = var.APP_NAME
   github_repo = "Snails8d/laravel-api"
 }
@@ -67,8 +67,8 @@ module "github_iam" {
 # ==========================================================
 # ELB の設定
 # ==========================================================
-module "elb" {
-  source            = "../_module/elb"
+module "alb" {
+  source            = "../_module/alb"
   app_name          = var.APP_NAME
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
@@ -97,7 +97,7 @@ module "ecs" {
   private_subnet_ids = module.network.private_subnet_ids
 
   cluster_name                = module.ecs_cluster.cluster_name
-  target_group_arn            = module.elb.aws_lb_target_group           # elb の設定
+  target_group_arn            = module.alb.aws_lb_target_group           # alb の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn   # ECS のtask に関連付けるIAM の設定
   app_key                     = var.APP_KEY
 

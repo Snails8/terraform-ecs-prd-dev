@@ -19,8 +19,8 @@ module "front_acm" {
 # ==========================================================
 # ELB の設定
 # ==========================================================
-module "front_elb" {
-  source            = "../_module/elb"
+module "front_alb" {
+  source            = "../_module/alb"
   app_name          = local.app_name
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
@@ -65,7 +65,7 @@ module "front_ecs" {
   private_subnet_ids = module.network.private_subnet_ids
 
   cluster_name                = module.ecs_cluster.cluster_name
-  target_group_arn            = module.elb.aws_lb_target_group          # elb の設定
+  target_group_arn            = module.alb.aws_lb_target_group          # alb の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn  # ECS のtask に関連付けるIAM の設定
   port                        = 3000  # task定義とECSのALB設定に渡すport
 
