@@ -101,13 +101,13 @@ https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateDBInstance.htm
 
 ## 運用 注意
 - ドメインをRoute53に登録していないと怒られるので注意
+- laravel_backend のgithub_iam に対象のアプリケーションリポジトリ名を追加
 
 
 フロント側
 - 必ずフロントエンドの locals = app_name -> フロント側のリポジトリ名 にしてください
 - 先にRoute53にホストゾーンを設定してください
-
-
+- frontend.tfのlocals内に必ずドメイン名を記載してください
 
 ## 懸念点
 github-actionsでアプリケーションのdeployをしているため、task-definition が二重管理になってしまっている。
