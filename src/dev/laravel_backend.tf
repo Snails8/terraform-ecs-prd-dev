@@ -73,6 +73,7 @@ module "alb" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg            = module.security_group.alb_http_sg_id
+  port              = 80
 
   domain = var.DOMAIN
   zone   = var.ZONE

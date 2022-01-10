@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "main" {
 
   # ALBからECSタスクのコンテナへトラフィックを振り分ける設定(ECS(nginx)へ流す)
   target_type          = "ip"
-  port                 = 80
+  port                 = var.port
   deregistration_delay = 300
   protocol             = "HTTP"
 
@@ -20,7 +20,7 @@ resource "aws_lb_target_group" "main" {
     timeout             = 5
     interval            = 30
     matcher             = 200
-    port                = 80
+    port                = var.port
     protocol            = "HTTP"
   }
 }

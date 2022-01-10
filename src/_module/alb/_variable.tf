@@ -18,6 +18,10 @@ variable "zone" {
   type = string
 }
 
+variable "port" {
+  type = string
+}
+
 # listener rule httpsで使用
 variable "acm_id" {
   type = string
