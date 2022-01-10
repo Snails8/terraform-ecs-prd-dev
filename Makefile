@@ -34,6 +34,9 @@ SET_ENV := export ENV=$(ENV) ;\
 up:
 	docker-compose up -d --build
 
+terraform:
+	docker-compose exec terraform /bin/ash
+
 init: pre
 	${SET_ENV} && \
 	${DC} terraform init ${TR_INIT_OPTION}
