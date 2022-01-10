@@ -34,7 +34,8 @@ resource "aws_ecs_service" "main" {
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
-  desired_count                     = 1   # task の数を設定しないと、serviceの内のタスクが0になり動作しない。
+  enable_execute_command            = true # コンテナ操作
+  desired_count                     = 1    # task の数を設定しないと、serviceの内のタスクが0になり動作しない。
   health_check_grace_period_seconds = 15
 
   # task_definition = aws_ecs_task_definition.main.arn
