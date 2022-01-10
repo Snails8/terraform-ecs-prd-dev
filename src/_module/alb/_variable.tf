@@ -18,7 +18,7 @@ variable "zone" {
   type = string
 }
 
-variable "port" {
+variable "target_group_port" {
   type = string
 }
 
