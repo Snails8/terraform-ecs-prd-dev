@@ -37,6 +37,16 @@ variable "iam_role_task_execution_arn" {
   type = string
 }
 
+#variable "entry_container_name" {
+#  type        = string
+#  description = "Entrypoint container name ex:nginx or worker is expected"
+#}
+
+variable "entry_container_port" {
+  type        = number
+  description = "Entrypoint container port number ex:nginx or worker port is expected"
+}
+
 #  grafana 使うほどではない
 #variable "loki_user" {
 #  type = string

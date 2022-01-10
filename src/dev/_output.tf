@@ -24,7 +24,7 @@ output "aws_vpc" {
 
 # ecs の動作検証に使用
 output "alb_dns_name" {
-  value = module.elb.dns_name
+  value = module.alb.dns_name
 }
 
 # output "db_step_ip" {

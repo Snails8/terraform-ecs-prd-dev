@@ -100,6 +100,7 @@ module "ecs" {
   target_group_arn            = module.alb.aws_lb_target_group           # alb の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn   # ECS のtask に関連付けるIAM の設定
   app_key                     = var.APP_KEY
+  entry_container_port        = 80
 
 #  loki_user = var.LOKI_USER    使うほどではない
 #  loki_pass = var.LOKI_PASS    使うほどではない
