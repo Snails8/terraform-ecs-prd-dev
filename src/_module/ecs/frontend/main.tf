@@ -2,7 +2,7 @@
 # Task Definition
 # =========================================================
 resource "aws_ecs_task_definition" "frontend" {
-  family =  "${var.app_name}-frontend"
+  family =  var.app_name
 
   # データプレーンの選択
   requires_compatibilities = ["FARGATE"]
@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "frontend" {
 # ========================================================
 resource "aws_ecs_service" "frontend" {
   # depends_on = [aws_lb_listener_rule.frontend]
-  name                   = "${var.app_name}-frontend"
+  name                   = var.app_name
   cluster                = var.cluster_name   # clusterの指定
   enable_execute_command = true               # SSMの有効化
 
@@ -66,6 +66,6 @@ resource "aws_ecs_service" "frontend" {
 # Logの設定自体はjson。あくまでwebとappの出力先を指定
 # =========================================================
 resource "aws_cloudwatch_log_group" "frontend" {
-  name              = "/${local.app_name}/frontend"
+  name              = "/${var.app_name}/ecs"
   retention_in_days = 7
 }

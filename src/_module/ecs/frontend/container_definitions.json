@@ -29,8 +29,8 @@
       "logDriver": "awslogs",
       "options": {
         "awslogs-region": "${region}",
-        "awslogs-group": "/${name}/frontend",
-        "awslogs-stream-prefix": "${name}-frontend"
+        "awslogs-group": "/${name}/ecs",
+        "awslogs-stream-prefix": "${name}"
       }
     },
     "environment": [

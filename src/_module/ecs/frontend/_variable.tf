@@ -41,7 +41,6 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
 locals {
-  app_name   = var.app_name
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
 }
