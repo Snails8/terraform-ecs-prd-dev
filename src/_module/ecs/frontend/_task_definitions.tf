@@ -29,6 +29,13 @@ locals {
         }
       ]
 
+      mountPoints = [
+        {
+          sourceVolume  = "app-storage",
+          containerPath = "/app"
+        }
+      ]
+
       linuxParameters = {
         initProcessEnabled = true
       }
@@ -37,8 +44,8 @@ locals {
         logDriver = "awslogs"
         options = {
           awslogs-region        = local.region
-          awslogs-group         = "/${var.app_name}/frontend"
-          awslogs-stream-prefix = "${var.app_name}-frontend"
+          awslogs-group         = "/${var.app_name}/ecs"
+          awslogs-stream-prefix = "${var.app_name}-ecs"
         }
       }
 

@@ -23,6 +23,12 @@
         "lastStatus": "RUNNING"
       }
     ],
+    "mountPoints": [
+      {
+        "sourceVolume": "app-storage",
+        "containerPath": "/app"
+      }
+    ],
     "linuxParameters": {
       "initProcessEnabled": true
     },
@@ -31,7 +37,7 @@
       "options": {
         "awslogs-region": "${region}",
         "awslogs-group": "/${name}/ecs",
-        "awslogs-stream-prefix": "${name}"
+        "awslogs-stream-prefix": "${name}-ecs"
       }
     },
     "environment": [
