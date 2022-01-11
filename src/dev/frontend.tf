@@ -25,7 +25,7 @@ module "front_alb" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg            = module.frontend_sg.frontend__alb_sg_id
-  target_group_port = 3000
+  target_group_port = 80
 
   domain = local.domain
   zone   = local.zone
@@ -66,9 +66,9 @@ module "front_ecs" {
   private_subnet_ids = module.network.private_subnet_ids
 
   cluster_name                = module.ecs_cluster.cluster_name
-  target_group_arn            = module.alb.aws_lb_target_group          # alb の設定
+  target_group_arn            = module.front_alb.aws_lb_target_group    # alb の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn  # ECS のtask に関連付けるIAM の設定
-  port                        = 3000  # task定義とECSのALB設定に渡すport
+  entry_container_port        = 3000  # task定義とECSのALB設定に渡すport
 
   sg_list = [
     module.frontend_sg.frontend__alb_sg_id,  # front 用の ALBの設定(nginxとの通信はしないのでecsの設定は不要)

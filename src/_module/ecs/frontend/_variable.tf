@@ -33,7 +33,7 @@ variable "iam_role_task_execution_arn" {
 }
 
 # ecs task 定義の指定に使用(moduleを使い回すため)
-variable "port" {
+variable "entry_container_port" {
   type = string
 }
 
@@ -45,15 +45,15 @@ locals {
   region     = data.aws_region.current.name
 }
 
-# コンテナ定義を呼び出す
-data "template_file" "container_definitions" {
-  template = file("../_module/ecs/frontend/container_definitions.json")
-
-  vars = {
-    tag        = "latest"
-    name       = var.app_name
-    account_id = local.account_id
-    region     = local.region
-    port       = var.port     #frontendのポート番号
-  }
-}
+# コンテナ定義を呼び出す(tf 化してあるのでコメントアウトしている)
+#data "template_file" "container_definitions" {
+#  template = file("../_module/ecs/frontend/container_definitions.json")
+#
+#  vars = {
+#    tag        = "latest"
+#    name       = var.app_name
+#    account_id = local.account_id
+#    region     = local.region
+#    port       = var.entry_container_port     #frontendのポート番号
+#  }
+#}

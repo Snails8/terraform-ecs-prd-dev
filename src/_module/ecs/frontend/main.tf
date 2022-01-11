@@ -51,7 +51,7 @@ resource "aws_ecs_service" "frontend" {
   load_balancer {
     target_group_arn = var.target_group_arn
     container_name   = var.app_name
-    container_port   = var.port   # frontendのtaskポートに合わせる必要あり。
+    container_port   = var.entry_container_port   # frontendのtaskポートに合わせる必要あり。
   }
 
   # cloudmapで使用
