@@ -34,7 +34,7 @@ variable "iam_role_task_execution_arn" {
 
 # ecs task 定義の指定に使用(moduleを使い回すため)
 variable "entry_container_port" {
-  type = string
+  type = number
 }
 
 data "aws_region" "current" {}
