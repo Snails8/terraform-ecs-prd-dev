@@ -39,15 +39,16 @@ terraform:
 
 init: pre
 	${SET_ENV} && \
-	${DC} terraform init ${TR_INIT_OPTION}
+	${DC} terraform init
 
 plan: pre
 	${SET_ENV} && \
+	${DC} terraform init && \
 	${DC} terraform plan
 
 migrate: pre
 	${SET_ENV} && \
-	${DC} terraform init -migrate-state ${TR_INIT_OPTION}
+	${DC} terraform init -migrate-state
 
 apply: pre
 	${SET_ENV} && \
@@ -56,6 +57,7 @@ apply: pre
 
 destroy: pre
 	${SET_ENV} && \
+	${DC} terraform init && \
 	${DC} terraform destroy
 
 # aws cliは入っておく。
