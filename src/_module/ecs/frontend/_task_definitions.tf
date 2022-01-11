@@ -1,4 +1,3 @@
-# task defitnion template
 # コンテナ定義を呼び出す
 data "template_file" "container_definitions" {
   template = jsonencode(local.ecs_tasks)
