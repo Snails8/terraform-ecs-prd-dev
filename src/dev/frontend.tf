@@ -2,8 +2,8 @@
 locals {
   app_name = "housebokan-admin-rea"
 
-  domain = "snails8.site"
-  zone   = "snails8.site"
+  domain = "sub.snails8.site"
+  zone   = "sub.snails8.site"
 }
 
 # ==========================================================
