@@ -25,7 +25,7 @@ module "front_alb" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg            = module.frontend_sg.frontend__alb_sg_id
-  target_group_port = 3000
+  target_group_port = 80
 
   domain = local.domain
   zone   = local.zone
@@ -39,7 +39,7 @@ module "front_iam" {
   source   = "../_module/iam"
   app_name = local.app_name
 
-  # GithubのOICDで使用  TODO::重複しているのでコメントアウト
+  # GithubのOICDで使用  *重複しているのでコメントアウト
 #  system      = local.app_name
 #  github_repo = "Snails8d/next-spa"
 }
