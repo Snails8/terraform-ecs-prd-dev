@@ -45,7 +45,7 @@ locals {
       "environment" = [
         {
           name  = "PORT"
-          value = "80"
+          value = "${var.entry_container_port}"
         }
       ]
 
