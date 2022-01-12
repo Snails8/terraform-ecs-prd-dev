@@ -2,8 +2,8 @@
 locals {
   app_name = "housebokan-admin-rea"
 
-  domain = "sub.snails8.site"
-  zone   = "sub.snails8.site"
+  domain = "snails8.site"
+  zone   = "snails8.site"
 }
 
 # ==========================================================
@@ -29,11 +29,11 @@ module "front_alb" {
 
   domain = local.domain
   zone   = local.zone
-  acm_id = module.acm.acm_id
+  acm_id = module.front_acm.acm_id
 }
 
 # ==========================================================
-# IAM 設定
+# IAM 設定 (共通利用するのでコメントアウト
 # ==========================================================
 module "front_iam" {
   source   = "../_module/iam"
@@ -60,9 +60,9 @@ module "frontend_sg" {
 # ECS 作成
 # ========================================================
 module "front_ecs" {
-  source   = "../_module/ecs/frontend"
-  app_name = local.app_name
-  vpc_id   = module.network.vpc_id
+  source             = "../_module/ecs/frontend"
+  app_name           = local.app_name
+  vpc_id             = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
 
   cluster_name                = module.ecs_cluster.cluster_name
