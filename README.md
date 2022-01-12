@@ -22,9 +22,9 @@ TF_VAR_LOKI_USER, TF_VAR_LOKI_PASS -> なくても問題ない
 $ vim ec2/sample-ec2-key.pub
 ```
 
-3. Creating s3-tf-bucket 
+3. Creating s3-tf-bucket
 ```shell
-$ make s3_tfbackend
+$ make s3_tfbackend # Check TF_STATE_BUCKET in Makefile  
 ```
 
 ### TerraformでAWS環境のbuildする
