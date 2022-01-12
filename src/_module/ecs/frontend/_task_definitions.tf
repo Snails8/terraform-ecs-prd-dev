@@ -29,13 +29,6 @@ locals {
         }
       ]
 
-      mountPoints = [
-        {
-          sourceVolume  = "app-storage",
-          containerPath = "/app"
-        }
-      ]
-
       linuxParameters = {
         initProcessEnabled = true
       }

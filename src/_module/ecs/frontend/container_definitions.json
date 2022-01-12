@@ -23,12 +23,6 @@
         "lastStatus": "RUNNING"
       }
     ],
-    "mountPoints": [
-      {
-        "sourceVolume": "app-storage",
-        "containerPath": "/app"
-      }
-    ],
     "linuxParameters": {
       "initProcessEnabled": true
     },
