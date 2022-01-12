@@ -15,7 +15,7 @@ output "redis_hostname" {
 
 # SECURITY_GROUPに該当
 output "db_security_groups" {
-  value = module.rds.db_security_group
+  value = module.security_group.db_sg_id
 }
 
 output "aws_vpc" {
@@ -24,7 +24,7 @@ output "aws_vpc" {
 
 # ecs の動作検証に使用
 output "alb_dns_name" {
-  value = module.elb.dns_name
+  value = module.alb.dns_name
 }
 
 # output "db_step_ip" {
@@ -34,4 +34,9 @@ output "alb_dns_name" {
 # github action に乗せる値
 output "ecs_exec_role" {
   value = module.iam.iam_role_task_execution_arn
+}
+
+# GitHub OIDCで使用
+output "github_arn" {
+  value = module.github_iam.github_role.arn
 }
