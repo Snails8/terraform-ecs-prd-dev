@@ -1,7 +1,9 @@
+# 抽象化には課題が多いので一旦 json で運用
+
 # コンテナ定義を呼び出す
-data "template_file" "container_definitions" {
-  template = jsonencode(local.ecs_tasks)
-}
+#data "template_file" "container_definitions" {
+#  template = jsonencode(local.ecs_tasks)
+#}
 
 locals {
   ecs_tasks = [
@@ -45,10 +47,9 @@ locals {
       "environment" = [
         {
           name  = "PORT"
-          value = "${var.entry_container_port}"
+          value = tostring(var.entry_container_port)  # number で渡すとコケるのでlocal でstring にしている
         }
       ]
-
     }
   ]
 }

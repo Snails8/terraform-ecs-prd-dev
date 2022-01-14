@@ -37,6 +37,11 @@ variable "entry_container_port" {
   type = number
 }
 
+# task 定義のpath
+variable "task_path" {
+  type = string
+}
+
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
@@ -46,14 +51,14 @@ locals {
 }
 
 # コンテナ定義を呼び出す(tf 化してあるのでコメントアウトしている)
-#data "template_file" "container_definitions" {
-#  template = file("../_module/ecs/frontend/container_definitions.json")
-#
-#  vars = {
-#    tag        = "latest"
-#    name       = var.app_name
-#    account_id = local.account_id
-#    region     = local.region
-#    port       = var.entry_container_port     #frontendのポート番号
-#  }
-#}
+data "template_file" "container_definitions" {
+  template = file("${var.task_path}")  # 指定先を参照
+
+  vars = {
+    tag         = "latest"
+    name        = var.app_name
+    account_id  = local.account_id
+    region      = local.region
+    port        = var.entry_container_port     #frontendのポート番号を渡したいがうまく行かない
+  }
+}
