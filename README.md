@@ -1,66 +1,57 @@
 # sample-terraform
 ![Image](.docs/ECS.drawio.png)
-### 環境変数をsetする
+
+### setup
 
 ---
-
 1. .envに値をsetする
 ``` 
 $ cp .env.example .env
 ```
 ``` 
 注意
-TF_VAR_APP_NAME -> 必ず対象アプリケーションのリポジトリ名にすること(小文字ハイフンつなぎ)
-TF_VAR_DB_MASTER_NAME,TF_VAR_DB_MASTER_PASS  -> 共にハイフンは使用不可
-TF_VAR_DB_NAME -> 文字列+数字にすること (ハイフン,文字列のみは使用不可)
-TF_VAR_DOMAIN, TF_VAR_ZONE ->  Route53に登録してあるもの
-TF_VAR_LOKI_USER, TF_VAR_LOKI_PASS -> なくても問題ない
+TF_VAR_APP_NAME         必ず対象アプリケーションのリポジトリ名にすること(小文字ハイフンつなぎ)
+TF_VAR_DB_MASTER_NAME   ハイフンは使用不可
+TF_VAR_DB_MASTER_PASS   ハイフンは使用不可
+TF_VAR_DB_NAME          文字列+数字にすること (ハイフン,文字列のみは使用不可)
+TF_VAR_LOKI_USER        なくても動く
+TF_VAR_LOKI_PASS        なくても動く
 ```
 
 2. public キーをセットする
 ```shell:
-$ vim ec2/sample-ec2-key.pub
+$ vim src/dev/ec2-key.pub
+$ vim src/prod/ec2-key.pub
 ```
 
-3. Creating s3-tf-bucket
+3. s3-tf-bucket の作成
 ```shell
 $ make s3_tfbackend # Check TF_STATE_BUCKET in Makefile  
 ```
+init, apply時にtf.stateが動悸されるようになる(同時作業にだけ注意)
+
+4. make ecr registry
+``` 
+$  make ecr-repo
+```
 
 ### TerraformでAWS環境のbuildする
-
 ---
 1. Terraform の読み込みと環境の作成
 ```shell:
-$ make up
-$ make init 
 $ make apply
 
 > Apply complete! Resources: 54 added, 1 changed, 0 destroyed!
 ```
 
-2. ビルドした AWS環境 の環境変数を SSM に設定する
+2. ssmに登録するために 構築したAWSの各種リソースの値を出力をする
 ```shell:
-// .env.productionに値の書き込み
 $ make outputs
 
 > DB_HOST末尾のportだけ削除(:5432 の削除) 
-
-// SSM (パラメーターストア)に値の登録
-// .env.production にあるvalueを登録 or 上書き
-$ make ssm-store     
 ```
 
-3. ECRにイメージをpushする
-```
-// set ECR
-$ make ecr-repo
-``` 
-
-### アプリケーション側の設定
-
----
-1. .env.githubの環境変数を確認して環境変数を登録する
+3. .env.github に保存される環境変数をアプリケーション側のSECRETにセットする
 ```shell:
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
@@ -70,8 +61,33 @@ SECURITY_GROUPS *outputsで確認して登録
 LOKI_ID     *コメントアウトで不要
 LOKI_SECRET *コメントアウトで不要
 ```
+```
+> SUBNETS の [] は不要で、 "Aaa","Bbb","Ccc" のみをコピペする
+> SECURITY_GROUPS はそのまま
+```
 
-2. Task-definitionの環境の参照先を注意する
+4. .env にある環境変数に値をセットする
+
+
+5. SSM (パラメーターストア)に値の登録
+```shell:
+# .env.production にあるvalueを登録 or 上書き
+$ make ssm-store    
+```
+## 運用・構築前 注意
+- ドメインをRoute53に登録していないと怒られるので注意
+- laravel_backend のgithub_iam に対象のアプリケーションリポジトリ名を追加してください
+
+フロント側
+- 必ずフロントエンドの locals = app_name -> フロント側のリポジトリ名 にしてください
+- 先にRoute53にホストゾーンを設定してください
+- frontend.tfのlocals内に必ずドメイン名を記載してください
+
+
+### アプリケーション側の注意
+
+---
+Task-definitionの環境の参照先を注意する
 ```json:
 # SSM に値がある場合
 {
@@ -102,17 +118,6 @@ https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateDBInstance.htm
 
 ✕: ハイフン(-), ✕:誰もが使いそうなusername=admin (すでに予約されているため)
 ```
-
-
-## 運用 注意
-- ドメインをRoute53に登録していないと怒られるので注意
-- laravel_backend のgithub_iam に対象のアプリケーションリポジトリ名を追加
-
-
-フロント側
-- 必ずフロントエンドの locals = app_name -> フロント側のリポジトリ名 にしてください
-- 先にRoute53にホストゾーンを設定してください
-- frontend.tfのlocals内に必ずドメイン名を記載してください
 
 ## 懸念点
 github-actionsでアプリケーションのdeployをしているため、task-definition が二重管理になってしまっている。
