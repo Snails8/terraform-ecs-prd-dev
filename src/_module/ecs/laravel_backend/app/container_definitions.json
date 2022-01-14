@@ -101,8 +101,8 @@
         "valueFrom": "/${name}/TF_VAR_APP_KEY"
       },
       {
-        "name": "REDIS_HOST",
-        "valueFrom": "/${name}/REDIS_HOST"
+        "name": "REDIS_URL",
+        "valueFrom": "/${name}/REDIS_URL"
       },
       {
         "name": "DB_HOST",

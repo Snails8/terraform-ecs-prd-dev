@@ -76,10 +76,9 @@ ecr-repo:
 ssm-store:
 	sh ./setting/bin/ssm-put.sh $(TF_VAR_APP_NAME) .env
 
-# SSM / Github SECRETに登録する値の用意 (上書き >> ,  新規作成 > ) -> .env 末尾に追加される
 outputs:
 	${SET_ENV} && \
 	${DC} terraform output -json |  ${DC} jq -r '"DB_HOST=\(.db_endpoint.value)"'  >> $(ENV_FILE)  && \
-	${DC} terraform output -json |  ${DC} jq -r '"REDIS_HOST=\(.redis_hostname.value[0].address)"' >> $(ENV_FILE)  && \
+	${DC} terraform output -json |  ${DC} jq -r '"REDIS_URL=rediss://\(.redis_hostname.value[0].address):6379"' >> $(ENV_FILE)  && \
 	${DC} terraform output -json |  ${DC} jq -r '"SUBNETS=\(.db_subnets.value)"' > $(ENV_GITHUB) && \
 	${DC} terraform output -json |  ${DC} jq -r '"SECURITY_GROUPS=\(.db_security_groups.value)"' >> $(ENV_GITHUB)

@@ -84,8 +84,8 @@ locals {
         "valueFrom": "${var.app_name}/TF_VAR_APP_KEY"
       },
       {
-        "name": "REDIS_HOST",
-        "valueFrom": "${var.app_name}/REDIS_HOST"
+        "name": "REDIS_URL",
+        "valueFrom": "${var.app_name}/REDIS_URL"
       },
       {
         "name": "DB_HOST",
