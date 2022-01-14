@@ -77,6 +77,7 @@ $ make ssm-store
 ## 運用・構築前 注意
 - ドメインをRoute53に登録していないと怒られるので注意
 - laravel_backend のgithub_iam に対象のアプリケーションリポジトリ名を追加してください
+- 本番運用するならaurora のsnapshot を false にすること
 
 フロント側
 - 必ずフロントエンドの locals = app_name -> フロント側のリポジトリ名 にしてください
