@@ -5,7 +5,7 @@ SRC := $1
 DC := docker-compose exec -T terraform
 ENV_FILE := .env
 ENV_GITHUB := .env.github
-TF_STATE_BUCKET := tfstate-snail
+TF_STATE_BUCKET := tfstate-housebokan-test
 
 # ==========================================================
 # 環境切り替え処理    *本番では make [cmd] SRC=prod とする(space注意)
@@ -22,6 +22,7 @@ SET_ENV := export ENV=$(ENV) ;\
            export COMPOSE_FILE=docker-compose.$(ENV).yml
 # ==========================================================
 # make コマンド (SRC=prod が必要な場合のみoption で加える)
+
 
 # ymlに値を渡すために.envをセット
 up:
@@ -68,17 +69,20 @@ s3_tfbackend:
 	aws s3 mb s3://${TF_STATE_BUCKET}-prod&& \
     aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET}-prod --versioning-configuration Status=Enabled
 
-# aws cliは入っておく。(日強に応じて追加)
+# aws cliは入っておく。 *環境に応じて変更してください
 ecr-repo:
 	aws ecr create-repository --repository-name $(TF_VAR_APP_NAME)-app
 	aws ecr create-repository --repository-name $(TF_VAR_APP_NAME)-nginx
+	aws ecr create-repository --repository-name next-spa
+	aws ecr create-repository --repository-name nuxt-spa
 
 ssm-store:
-	sh ./setting/bin/ssm-put.sh $(TF_VAR_APP_NAME) .env
+	sh ./setting/bin/ssm_put.sh $(TF_VAR_APP_NAME) .env
 
+# SSM / Github SECRETに登録する値の用意 (上書き >> ,  新規作成 > ) -> .env 末尾に追加される
 outputs:
 	${SET_ENV} && \
 	${DC} terraform output -json |  ${DC} jq -r '"DB_HOST=\(.db_endpoint.value)"'  >> $(ENV_FILE)  && \
-	${DC} terraform output -json |  ${DC} jq -r '"REDIS_URL=rediss://\(.redis_hostname.value[0].address):6379"' >> $(ENV_FILE)  && \
+	${DC} terraform output -json |  ${DC} jq -r '"REDIS_HOST=\(.redis_hostname.value[0].address)"' >> $(ENV_FILE)  && \
 	${DC} terraform output -json |  ${DC} jq -r '"SUBNETS=\(.db_subnets.value)"' > $(ENV_GITHUB) && \
 	${DC} terraform output -json |  ${DC} jq -r '"SECURITY_GROUPS=\(.db_security_groups.value)"' >> $(ENV_GITHUB)
