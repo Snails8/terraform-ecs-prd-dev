@@ -28,7 +28,7 @@ $ vim src/prod/ec2-key.pub
 ```shell
 $ make s3_tfbackend # Check TF_STATE_BUCKET in Makefile  
 ```
-init, apply時にtf.stateが動悸されるようになる(同時作業にだけ注意)
+init, apply時にtf.stateが同期されるようになる(同時作業にだけ注意)
 
 4. make ecr registry
 ``` 
@@ -41,7 +41,7 @@ $  make ecr-repo
 ```shell:
 $ make apply
 
-> Apply complete! Resources: 54 added, 1 changed, 0 destroyed!
+> Apply complete! Resources: 154 added, 1 changed, 0 destroyed!
 ```
 
 2. ssmに登録するために 構築したAWSの各種リソースの値を出力をする
@@ -141,32 +141,37 @@ github-actions にCodePipelineをかませる
 ## Architecture
 ``` 
 .
-├── MakeFile
-├── settings
-│   ├── bin
-│   │   └── sessionmanager-bundle  
-│   │       └── bin : utilty for aws cli
-│   └── template : container definition template file.
+├── Makefile
+├── setting    # command etc..
+│   ├── bin
+│   │   └── sessionmanager-bundle
+│   │       └── bin
+│   └── template
 └── src
-    ├── _module: Used for dev or prod envrionment
-    │   ├── acm      *aws certificate manager
-    │   ├── iam     
-    │   ├── cloudmap 
-    │   ├── ec2
-    │   ├── ecs
-    │   │   ├── cluster
-    │   │   ├── frontend   :frontend container ,which connected to backend/app
-    │   │   └── laravel_backend
-    │   │       ├── app    : app + nginx (php-fpm)
-    │   │       └── worker : worker (redis) 
-    │   ├── elasticache   *redis
-    │   ├── elb      
-    │   ├── iam
-    │   ├── network
-    │   ├── rds     
-    │   └── security_group
-    │   └── ses
-    │
-    ├── dev : AWS Environment for dev.
-    └── prod
+    ├── _module   # common use
+    │   ├── acm
+    │   ├── alb
+    │   ├── aurora
+    │   ├── cloudmap
+    │   ├── ec2
+    │   ├── ecs
+    │   │   ├── cluster
+    │   │   ├── frontend
+    │   │   │   └── json
+    │   │   └── laravel_backend
+    │   │       ├── app
+    │   │       └── worker
+    │   ├── elasticache
+    │   ├── iam
+    │   │   └── github_oidc
+    │   ├── network
+    │   ├── rds
+    │   ├── security_group
+    │   │   ├── frontend
+    │   │   └── laravel_backend
+    │   ├── ses
+    │   └── waf
+    ├── dev    # dev env
+    └── prod   # prod env
+
 ```
