@@ -12,3 +12,8 @@ terraform {
     region = "ap-northeast-1"
   }
 }
+
+# provider の設定 ( provider は aws 専用ではなくGCPとかも使える)
+provider "aws" {
+  region = "ap-northeast-1"
+}

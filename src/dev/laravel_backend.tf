@@ -1,8 +1,3 @@
-# provider の設定 ( provider は aws 専用ではなくGCPとかも使える)
-provider "aws" {
-  region = "ap-northeast-1"
-}
-
 # ========================================================
 # Network 作成   (VPC, subnet(pub, pri), IGW, RouteTable, Route, RouteTableAssociation)
 # ========================================================
@@ -44,8 +39,8 @@ module "ec2" {
 module "acm" {
   source   = "../_module/acm"
   app_name = var.APP_NAME
-  zone     = var.ZONE
-  domain   = var.DOMAIN
+  zone     = var.zone
+  domain   = var.domain
 }
 
 # ==========================================================
@@ -75,8 +70,8 @@ module "alb" {
   alb_sg            = module.security_group.alb_http_sg_id
   target_group_port = 80
 
-  domain = var.DOMAIN
-  zone   = var.ZONE
+  domain = var.domain
+  zone   = var.zone
   acm_id = module.acm.acm_id
 }
 
@@ -186,8 +181,8 @@ module "elasticache" {
 # ========================================================
 module "ses" {
   source = "../_module/ses"
-  domain = var.DOMAIN
-  zone   = var.ZONE
+  domain = var.domain
+  zone   = var.zone
 }
 
 # ========================================================

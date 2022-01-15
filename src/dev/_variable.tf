@@ -13,13 +13,15 @@ variable "vpc_cidr" {
 }
 
 # ELB で使用 https化に使う
-variable "DOMAIN" {
+variable "domain" {
   type = string
+  default = "snails8.site"
 }
 
 # acm で使用 (TLS証明書)
-variable "ZONE" {
+variable "zone" {
   type = string
+  default = "snails8.site"
 }
 
 variable "APP_KEY" {
