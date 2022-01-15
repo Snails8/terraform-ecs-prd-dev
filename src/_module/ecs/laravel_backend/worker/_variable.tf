@@ -31,7 +31,7 @@ locals {
 }
 
 data "template_file" "container_definitions" {
-  template = file("../_module/ecs/laravel_backend/app/container_definitions.json")
+  template = file("../_module/ecs/laravel_backend/worker/worker_container_definitions.json")
 
   # templateのjsonファイルに値を渡す
   vars = {

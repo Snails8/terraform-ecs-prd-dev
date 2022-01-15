@@ -1,7 +1,7 @@
 [
   {
     "name": "worker",
-    "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/app:${tag}",
+    "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}-app:${tag}",
     "command": [
       "php",
       "artisan",
@@ -26,7 +26,7 @@
       "options": {
         "awslogs-region": "${region}",
         "awslogs-group": "/${name}/worker",
-        "awslogs-stream-prefix": "ecs/worker"
+        "awslogs-stream-prefix": "${name}-worker"
       }
     },
     "healthCheck": {
@@ -39,12 +39,52 @@
     },
     "environment": [
       {
+        "name": "APP_NAME",
+        "value": "laravel-api"
+      },
+      {
         "name": "APP_ENV",
         "value": "production"
       },
       {
+        "name": "APP_SCHEME",
+        "value": "https"
+      },
+      {
+        "name": "APP_DEBUG",
+        "value": "false"
+      },
+      {
+        "name": "APP_URL",
+        "value": "https://snails8.site"
+      },
+      {
+        "name": "AWS_BUCKET",
+        "value": "laravel-api-prod"
+      },
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "ap-northeast-1"
+      },
+      {
+        "name": "LANG",
+        "value": "ja_JP.UTF-8"
+      },
+      {
+        "name": "TZ",
+        "value": "Asia/Tokyo"
+      },
+      {
         "name": "LOG_CHANNEL",
         "value": "stderr"
+      },
+      {
+        "name": "DB_PORT",
+        "value": "5432"
+      },
+      {
+        "name": "DB_CONNECTION",
+        "value": "pgsql"
       },
       {
         "name": "SESSION_DRIVER",
@@ -52,6 +92,10 @@
       },
       {
         "name": "CACHE_DRIVER",
+        "value": "redis"
+      },
+      {
+        "name": "QUEUE_DRIVER",
         "value": "redis"
       },
       {
@@ -64,11 +108,11 @@
       },
       {
         "name": "MAIL_FROM_ADDRESS",
-        "value": "comu2e+ses@gmail.com"
+        "value": "snails8d+ses@gmail.com"
       },
       {
         "name": "MAIL_FROM_NAME",
-        "value": "takahashi-worker"
+        "value": "snail-test-email"
       },
       {
         "name": "SES_REGION",
@@ -78,35 +122,27 @@
     "secrets": [
       {
         "name": "APP_KEY",
-        "valueFrom": "APP_KEY"
+        "valueFrom": "/${name}/TF_VAR_APP_KEY"
       },
       {
-        "name": "REDIS_HOST",
-        "valueFrom": "/${name}/REDIS_HOST"
+        "name": "REDIS_URL",
+        "valueFrom": "/${name}/REDIS_URL"
       },
       {
         "name": "DB_HOST",
-        "valueFrom": "DB_HOST"
+        "valueFrom": "/${name}/DB_HOST"
       },
       {
         "name": "DB_DATABASE",
-        "valueFrom": "DB_NAME"
+        "valueFrom": "/${name}/TF_VAR_DB_NAME"
       },
       {
         "name": "DB_USERNAME",
-        "valueFrom": "DB_USERNAME"
+        "valueFrom": "/${name}/TF_VAR_DB_MASTER_NAME"
       },
       {
         "name": "DB_PASSWORD",
-        "valueFrom": "DB_PASSWORD"
-      },
-      {
-        "name": "SES_KEY",
-        "valueFrom": "SES_KEY"
-      },
-      {
-        "name": "SES_SECRET",
-        "valueFrom": "SES_SECRET"
+        "valueFrom": "/${name}/TF_VAR_DB_MASTER_PASS"
       }
     ]
   }
