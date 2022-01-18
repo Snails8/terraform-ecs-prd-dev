@@ -129,6 +129,14 @@
         "valueFrom": "/${name}/REDIS_URL"
       },
       {
+        "name": "DB_READ_HOST",
+        "valueFrom": "/${name}/DB_READ_HOST"
+      },
+      {
+        "name": "DB_WRITE_HOST",
+        "valueFrom": "/${name}/DB_WRITE_HOST"
+      },
+      {
         "name": "DB_HOST",
         "valueFrom": "/${name}/DB_HOST"
       },
