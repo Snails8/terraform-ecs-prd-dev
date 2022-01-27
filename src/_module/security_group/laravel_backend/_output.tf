@@ -3,7 +3,7 @@ output "alb_http_sg_id" {
   value = aws_security_group.alb_http.id
 }
 
-# ECS / Worker で使用
+# ECS / Worker / vpc_endpoint  で使用
 output "ecs_sg_id" {
   value = aws_security_group.ecs_endpoint.id
 }
