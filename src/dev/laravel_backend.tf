@@ -63,7 +63,7 @@ module "github_iam" {
 # ELB の設定
 # ==========================================================
 module "alb" {
-  source            = "../_module/alb"
+  source            = "../_module/alb/https"
   app_name          = var.APP_NAME
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
