@@ -1,6 +1,7 @@
 # ============================================================
 # acm : AWS Certificate Manager
-#
+
+# ドメインにNSをセットしないといつまで立っても発行されない
 # ALBとドメインの紐付けとhttpsの対応
 #
 # 1. AWS Certificate Manager  => TLS証明書の発行
