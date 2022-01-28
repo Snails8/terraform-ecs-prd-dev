@@ -126,6 +126,8 @@ module "ecs_worker" {
   cluster_arn          = module.ecs_cluster.cluster_arn
   iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
 
+  task_path = "../_module/ecs/laravel_backend/worker/json/prod_worker_container_definitions.json"
+
   sg_list = [
     module.security_group.alb_http_sg_id,
     module.security_group.ecs_sg_id,

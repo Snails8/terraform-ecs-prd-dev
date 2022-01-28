@@ -23,6 +23,11 @@ variable "sg_list" {
   type        = list(string)
 }
 
+# task 定義のpath
+variable "task_path" {
+  type = string
+}
+
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 locals {
@@ -31,7 +36,7 @@ locals {
 }
 
 data "template_file" "container_definitions" {
-  template = file("../_module/ecs/laravel_backend/worker/worker_container_definitions.json")
+  template = file("${var.task_path}")
 
   # templateのjsonファイルに値を渡す
   vars = {
