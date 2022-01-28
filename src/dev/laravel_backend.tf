@@ -132,6 +132,31 @@ module "ecs_worker" {
 }
 
 # ========================================================
+# batch 環境
+# ========================================================
+module "ecs_worker" {
+  source               = "../_module/ecs/laravel_backend/worker"
+  app_name             = var.APP_NAME
+  vpc_id               = module.network.vpc_id
+  placement_subnet     = module.network.private_subnet_ids
+
+  cluster              = module.ecs_cluster.cluster_name
+  cluster_arn          = module.ecs_cluster.cluster_arn
+  iam_role_task_exection_arn = module.iam.iam_role_task_execution_arn
+
+  task_path = "../_module/ecs/laravel_backend/batch/json/dev_batch_container_definitions.json"
+
+  sg_list = [
+    module.security_group.alb_http_sg_id,
+    module.security_group.ecs_sg_id,
+    module.security_group.redis_ecs_sg_id,
+    module.security_group.ses_ecs_sg_id
+  ]
+
+  # service_registries_arn = module.cloudmap.cloudmap_internal_Arn
+}
+
+# ========================================================
 # RDS (PostgreSQL)
 # ========================================================
 module "rds" {

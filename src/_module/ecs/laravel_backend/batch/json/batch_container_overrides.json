@@ -1,0 +1,12 @@
+{
+  "containerOverrides": [
+    {
+      "name": "batch",
+      "command": [
+        "php",
+        "artisan",
+        "${command}"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+[
+  {
+    "name": "batch",
+    "image": "${account_id}.dkr.ecr.${region}.amazonaws.com/${name}-app:${tag}",
+    "command": [
+      "php",
+      "artisan",
+      "schedule:run"
+    ],
+    "managedAgents": [
+      {
+        "lastStartedAt": "2021-03-01T14:49:44.574000-06:00",
+        "name": "ExecuteCommandAgent",
+        "lastStatus": "RUNNING"
+      }
+    ],
+    "mountPoints": [
+      {
+        "sourceVolume": "app-storage",
+        "containerPath": "/app"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "${region}",
+        "awslogs-group": "/${name}/batch",
+        "awslogs-stream-prefix": "${name}-batch"
+      }
+    },
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "php artisan -v|| exit 1"
+      ],
+      "timeout": 5,
+      "retries": 3
+    },
+    "environment": [
+      {
+        "name": "APP_NAME",
+        "value": "ハウスボカン"
+      },
+      {
+        "name": "APP_ENV",
+        "value": "production"
+      },
+      {
+        "name": "APP_SCHEME",
+        "value": "https"
+      },
+      {
+        "name": "APP_DEBUG",
+        "value": "false"
+      },
+      {
+        "name": "APP_URL",
+        "value": "https://sumarch.tech"
+      },
+      {
+        "name": "AWS_BUCKET",
+        "value": "housebokan-dev"
+      },
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "ap-northeast-1"
+      },
+      {
+        "name": "LANG",
+        "value": "ja_JP.UTF-8"
+      },
+      {
+        "name": "TZ",
+        "value": "Asia/Tokyo"
+      },
+      {
+        "name": "LOG_CHANNEL",
+        "value": "production"
+      },
+      {
+        "name": "DB_PORT",
+        "value": "5432"
+      },
+      {
+        "name": "DB_CONNECTION",
+        "value": "pgsql"
+      },
+      {
+        "name": "SESSION_DRIVER",
+        "value": "redis"
+      },
+      {
+        "name": "CACHE_DRIVER",
+        "value": "redis"
+      },
+      {
+        "name": "QUEUE_DRIVER",
+        "value": "redis"
+      },
+      {
+        "name": "QUEUE_CONNECTION",
+        "value": "redis"
+      },
+      {
+        "name": "REDIS_SCHEME",
+        "value": "tls"
+      },
+      {
+        "name": "SLACK_CHANNEL",
+        "value": "conversion-bokan"
+      },
+      {
+        "name": "SLACK_ICON",
+        "value": ":tada:"
+      },
+      {
+        "name": "SLACK_USERNAME",
+        "value": "Sumaguchi"
+      },
+      {
+        "name": "MAIL_DRIVER",
+        "value": "ses"
+      },
+      {
+        "name": "MAIL_FROM_ADDRESS",
+        "value": "snails8d+ses@gmail.com"
+      },
+      {
+        "name": "MAIL_FROM_NAME",
+        "value": "bokan-test"
+      },
+      {
+        "name": "SES_REGION",
+        "value": "ap-northeast-1"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "APP_KEY",
+        "valueFrom": "/${name}/TF_VAR_APP_KEY"
+      },
+      {
+        "name": "REDIS_HOST",
+        "valueFrom": "/${name}/REDIS_HOST"
+      },
+      {
+        "name": "DB_READ_HOST",
+        "valueFrom": "/${name}/DB_READ_HOST"
+      },
+      {
+        "name": "DB_WRITE_HOST",
+        "valueFrom": "/${name}/DB_WRITE_HOST"
+      },
+      {
+        "name": "DB_DATABASE",
+        "valueFrom": "/${name}/TF_VAR_DB_NAME"
+      },
+      {
+        "name": "DB_USERNAME",
+        "valueFrom": "/${name}/TF_VAR_DB_MASTER_NAME"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "valueFrom": "/${name}/TF_VAR_DB_MASTER_PASS"
+      },
+      {
+        "name": "SES_KEY",
+        "valueFrom": "/${name}/SES_KEY"
+      },
+      {
+        "name": "SES_SECRET",
+        "valueFrom": "/${name}/SES_SECRET"
+      }
+    ]
+  }
+]
