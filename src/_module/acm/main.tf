@@ -22,6 +22,7 @@ data "aws_route53_zone" "main" {
 # ===================================================================
 resource "aws_acm_certificate" "main" {
   domain_name = var.domain
+  subject_alternative_names = [format("*.%s", data.aws_route53_zone.main.name)] # sub ドメインもSSL化
   validation_method = "DNS"
 
   lifecycle {
