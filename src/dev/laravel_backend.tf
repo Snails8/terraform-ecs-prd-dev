@@ -101,6 +101,8 @@ module "ecs" {
 #  loki_user = var.LOKI_USER    使うほどではない
 #  loki_pass = var.LOKI_PASS    使うほどではない
 
+  task_path = "../_module/ecs/laravel_backend/app/json/dev_container_definitions.json"
+
   sg_list = [
     module.security_group.alb_http_sg_id,  # ALBの設定
     module.security_group.ecs_sg_id,
@@ -136,7 +138,7 @@ module "ecs_worker" {
 # ========================================================
 # batch 環境
 # ========================================================
-module "ecs_worker" {
+module "ecs_batch" {
   source               = "../_module/ecs/laravel_backend/worker"
   app_name             = var.APP_NAME
   vpc_id               = module.network.vpc_id

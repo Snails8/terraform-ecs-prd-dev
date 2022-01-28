@@ -56,6 +56,10 @@ variable "entry_container_port" {
 #  type = string
 #}
 
+variable "task_path" {
+  type = string
+}
+
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
@@ -66,7 +70,7 @@ locals {
 
 # コンテナ定義を呼び出す
 data "template_file" "container_definitions" {
-  template = file("../_module/ecs/laravel_backend/app/container_definitions.json")
+  template = file("${var.task_path}")
 
   vars = {
     tag        = "latest"

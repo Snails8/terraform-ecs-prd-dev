@@ -106,6 +106,8 @@ module "ecs" {
   #  loki_user = var.LOKI_USER    使うほどではない
   #  loki_pass = var.LOKI_PASS    使うほどではない
 
+  task_path = "../_module/ecs/laravel_backend/app/json/prod_container_definitions.json"
+
   sg_list = [
     module.security_group.alb_http_sg_id,  # ALBの設定
     module.security_group.ecs_sg_id,
