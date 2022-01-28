@@ -5,7 +5,7 @@ SRC := $1
 DC := docker-compose exec -T terraform
 ENV_FILE := .env
 ENV_GITHUB := .env.github
-TF_STATE_BUCKET := tfstate-housebokan-test
+TF_STATE_BUCKET := tfstate-snails8d
 
 # ==========================================================
 # 環境切り替え処理    *本番では make [cmd] SRC=prod とする(space注意)
@@ -63,11 +63,11 @@ destroy: pre
 
 # s3
 s3_tfbackend:
-	  # S3 bucket作成 versioning機能追加
+	# S3 bucket作成 versioning機能追加
 	aws s3 mb s3://${TF_STATE_BUCKET}-dev&& \
-	aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET}-dev --versioning-configuration Status=Enabled && \
-	aws s3 mb s3://${TF_STATE_BUCKET}-prod&& \
-    aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET}-prod --versioning-configuration Status=Enabled
+	aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET}-dev --versioning-configuration Status=Enabled
+#	aws s3 mb s3://${TF_STATE_BUCKET}-prod&& \
+#    aws s3api put-bucket-versioning --bucket ${TF_STATE_BUCKET}-prod --versioning-configuration Status=Enabled
 
 # aws cliは入っておく。 *環境に応じて変更してください
 ecr-repo:
