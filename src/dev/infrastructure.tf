@@ -23,12 +23,12 @@ module "security_group" {
 # ==========================================================
 # ACM 発行
 # ==========================================================
-module "acm" {
-  source   = "../_module/acm"
-  app_name = var.APP_NAME
-  zone     = var.zone
-  domain   = var.domain
-}
+#module "acm" {
+#  source   = "../_module/acm"
+#  app_name = var.APP_NAME
+#  zone     = var.zone
+#  domain   = var.domain
+#}
 
 # ==========================================================
 # IAM 設定
@@ -40,11 +40,11 @@ module "iam" {
 }
 
 # GithubのOICDで使用
-module "github_iam" {
-  source = "../_module/iam/github_oidc"
-  system      = var.APP_NAME
-  github_repo = "Snails8d/laravel-api"
-}
+#module "github_iam" {
+#  source = "../_module/iam/github_oidc"
+#  system      = var.APP_NAME
+#  github_repo = "Snails8d/laravel-api"
+#}
 
 # ========================================================
 # RDS (PostgreSQL)
@@ -94,8 +94,8 @@ module "elasticache" {
 # SES : Simple Email Service
 # メール送信に使用
 # ========================================================
-module "ses" {
-  source = "../_module/ses"
-  domain = var.domain
-  zone   = var.zone
-}
+#module "ses" {
+#  source = "../_module/ses"
+#  domain = var.domain
+#  zone   = var.zone
+#}
