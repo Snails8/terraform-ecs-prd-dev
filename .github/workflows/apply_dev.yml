@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Create .env file
       - shell: bash
-        run: |
+        run:
           touch .env
 #          echo "TF_VAR_DB_NAME=${{ secrets.DEV_TF_VAR_DB_NAME }}" >> .env
 #          echo "TF_VAR_DB_MASTER_NAME=${{ secrets.DEV_TF_VAR_DB_MASTER_NAME }}" >> .env
