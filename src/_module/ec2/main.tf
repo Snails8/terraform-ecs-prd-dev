@@ -93,10 +93,10 @@ resource "aws_instance" "main" {
 # ==================================================================
 # SSHKey (ssh-keygen -t rsa で発行したpub-key を指定)
 # ==================================================================
-resource "aws_key_pair" "main" {
-  key_name   = "${var.app_name}-ec2-key"
-  public_key = file(var.ec2_key_file_path)
-}
+#resource "aws_key_pair" "main" {
+#  key_name   = "${var.app_name}-ec2-key"
+#  public_key = file(var.ec2_key_file_path)
+#}
 
 # EIP (ElasticIP)
 resource "aws_eip" "main" {
