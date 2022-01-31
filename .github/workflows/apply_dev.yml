@@ -1,6 +1,5 @@
 name: dev-apply
 
-# 環境変数の管理が死亡するので一旦使用していない
 on:
   push:
     branches:
@@ -9,7 +8,7 @@ on:
 env:
   # please set your own app name corresponding with application name.
   # APP_NAME: ${{ github.event.repository.name }}
-  APP_NAME: housebokan
+  APP_NAME: laravel-api
 
 jobs:
   Setup:
@@ -53,8 +52,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: |
-          terraform init
+        run: terraform init
 
       - name: Terraform Apply
         id: apply
