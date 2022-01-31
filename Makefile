@@ -71,13 +71,13 @@ s3_tfbackend:
 
 # aws cliは入っておく。 *環境に応じて変更してください
 ecr-repo:
-	aws ecr create-repository --repository-name $(TF_VAR_APP_NAME)-app
-	aws ecr create-repository --repository-name $(TF_VAR_APP_NAME)-nginx
+	aws ecr create-repository --repository-name $(APP_NAME)-app
+	aws ecr create-repository --repository-name $(APP_NAME)-nginx
 	aws ecr create-repository --repository-name next-spa
 	aws ecr create-repository --repository-name nuxt-spa
 
 ssm-store:
-	sh ./setting/bin/ssm_put.sh $(TF_VAR_APP_NAME) .env
+	sh ./setting/bin/ssm_put.sh $(APP_NAME) .env
 
 # SSM / Github SECRETに登録する値の用意 (上書き >> ,  新規作成 > ) -> .env 末尾に追加される
 outputs:

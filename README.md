@@ -10,12 +10,12 @@ $ cp .env.example .env
 ```
 ``` 
 注意
-TF_VAR_APP_NAME         必ず対象アプリケーションのリポジトリ名にすること(小文字ハイフンつなぎ)
-TF_VAR_DB_MASTER_NAME   ハイフンは使用不可
-TF_VAR_DB_MASTER_PASS   ハイフンは使用不可
-TF_VAR_DB_NAME          文字列+数字にすること (ハイフン,文字列のみは使用不可)
-TF_VAR_LOKI_USER        なくても動く
-TF_VAR_LOKI_PASS        なくても動く
+APP_NAME         必ず対象アプリケーションのリポジトリ名にすること(小文字ハイフンつなぎ)
+DB_MASTER_NAME   ハイフンは使用不可
+DB_MASTER_PASS   ハイフンは使用不可
+DB_NAME          文字列+数字にすること (ハイフン,文字列のみは使用不可)
+LOKI_USER        なくても動く
+LOKI_PASS        なくても動く
 ```
 
 2. public キーをセットする

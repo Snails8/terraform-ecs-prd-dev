@@ -30,15 +30,15 @@ variable "APP_KEY" {
 
 # SSM から取得
 data "aws_ssm_parameter" "db_username" {
-  name = "/${var.APP_NAME}/TF_VAR_DB_MASTER_NAME"
+  name = "/${var.APP_NAME}/DB_MASTER_NAME"
 }
 
 data "aws_ssm_parameter" "db_pass" {
-  name = "/${var.APP_NAME}/TF_VAR_DB_MASTER_PASS"
+  name = "/${var.APP_NAME}/DB_MASTER_PASS"
 }
 
 data "aws_ssm_parameter" "db_name" {
-  name = "/${var.APP_NAME}/TF_VAR_DB_NAME"
+  name = "/${var.APP_NAME}/DB_NAME"
 }
 
 # RDS で使用。.env に仕込むならこれ

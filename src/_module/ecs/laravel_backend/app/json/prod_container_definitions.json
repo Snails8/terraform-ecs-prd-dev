@@ -151,7 +151,7 @@
     "secrets": [
       {
         "name": "APP_KEY",
-        "valueFrom": "/${name}/TF_VAR_APP_KEY"
+        "valueFrom": "/${name}/APP_KEY"
       },
       {
         "name": "REDIS_URL",
@@ -171,15 +171,15 @@
       },
       {
         "name": "DB_DATABASE",
-        "valueFrom": "/${name}/TF_VAR_DB_NAME"
+        "valueFrom": "/${name}/DB_NAME"
       },
       {
         "name": "DB_USERNAME",
-        "valueFrom": "/${name}/TF_VAR_DB_MASTER_NAME"
+        "valueFrom": "/${name}/DB_MASTER_NAME"
       },
       {
         "name": "DB_PASSWORD",
-        "valueFrom": "/${name}/TF_VAR_DB_MASTER_PASS"
+        "valueFrom": "/${name}/DB_MASTER_PASS"
       }
     ]
   }
