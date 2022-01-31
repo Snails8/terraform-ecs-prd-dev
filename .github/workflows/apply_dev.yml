@@ -29,10 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Create .env file
-      - id: set_env
-      - shell: bash
+        shell: bash
         run:
           touch .env
           #          echo "TF_VAR_DB_NAME=${{ secrets.DEV_TF_VAR_DB_NAME }}" >> .env
