@@ -29,9 +29,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        shell: bash
-        run:
-          touch .env
+
+
+      - name: set .env
+        run: touch .env |
           #          echo "TF_VAR_DB_NAME=${{ secrets.DEV_TF_VAR_DB_NAME }}" >> .env
           #          echo "TF_VAR_DB_MASTER_NAME=${{ secrets.DEV_TF_VAR_DB_MASTER_NAME }}" >> .env
           #          echo "TF_VAR_DB_MASTER_PASS=${{ secrets.DEV_TF_VAR_DB_MASTER_PASS }}" >> .env
