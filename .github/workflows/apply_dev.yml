@@ -32,7 +32,8 @@ jobs:
 
 
       - name: set .env
-        run: echo "TF_VAR_APP_KEY=${{ secrets.DEV_TF_VAR_APP_KEY }}" >> .env
+        run: echo "TF_VAR_APP_KEY=${{ secrets.DEV_TF_VAR_APP_KEY }}" >> .env |
+
 
 
 #      - name: set .env
