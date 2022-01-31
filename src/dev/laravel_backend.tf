@@ -9,7 +9,8 @@ module "ec2" {
 
   ssh_sg_id          = module.security_group.ssh_sg_id
   instance_type      = "t3.nano"
-  ec2_key_file_path  = "../dev/ec2-key.pub"
+#  ec2_key_file_path  = "../dev/ec2-key.pub"
+  ec2_key_file_path = "${var.app_name}-dev"  # ec2のキーは先に上げる
 }
 
 # ==========================================================
