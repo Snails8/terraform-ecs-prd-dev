@@ -28,18 +28,31 @@ variable "APP_KEY" {
   type = string
 }
 
-# RDS で使用
-variable "DB_NAME" {
-  type = string
+# SSM から取得
+data "aws_ssm_parameter" "db_username" {
+  name = "/${var.APP_NAME}/TF_VAR_DB_MASTER_NAME"
 }
 
-variable "DB_MASTER_NAME" {
-  type = string
+data "aws_ssm_parameter" "db_pass" {
+  name = "/${var.APP_NAME}/TF_VAR_DB_MASTER_PASS"
 }
 
-variable "DB_MASTER_PASS" {
-  type = string
+data "aws_ssm_parameter" "db_name" {
+  name = "/${var.APP_NAME}/TF_VAR_DB_NAME"
 }
+
+# RDS で使用。.env に仕込むならこれ
+#variable "DB_NAME" {
+#  type = string
+#}
+#
+#variable "DB_MASTER_NAME" {
+#  type = string
+#}
+#
+#variable "DB_MASTER_PASS" {
+#  type = string
+#}
 
 # 以下固定化し共有するときに使用
 #variable "app_name" {

@@ -57,9 +57,9 @@ module "rds" {
   db_sg_id           = module.security_group.db_sg_id
   private_subnet_ids = module.network.private_subnet_ids
 
-  database_name   = var.DB_NAME
-  master_username = var.DB_MASTER_NAME
-  master_password = var.DB_MASTER_PASS
+  database_name   = data.aws_ssm_parameter.db_name.value
+  master_username = data.aws_ssm_parameter.db_username.value
+  master_password = data.aws_ssm_parameter.db_pass.value
 }
 
 # ========================================================
@@ -74,11 +74,10 @@ module "rds" {
 #  private_subnet_ids = module.network.private_subnet_ids
 #  azs                = var.azs
 #
-#  database_name   = var.DB_NAME
-#  master_username = var.DB_MASTER_NAME
-#  master_password = var.DB_MASTER_PASS
+#  database_name   = data.aws_ssm_parameter.db_name.value
+#  master_username = data.aws_ssm_parameter.db_username.value
+#  master_password = data.aws_ssm_parameter.db_pass.value
 #}
-
 
 # ========================================================
 # Elasticache (Redis)

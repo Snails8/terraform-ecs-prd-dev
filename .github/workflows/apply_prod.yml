@@ -29,9 +29,6 @@ jobs:
       - shell: bash
         run: |
           touch .env
-          echo "TF_VAR_DB_NAME=${{ secrets.PROD_TF_VAR_DB_NAME }}" >> .env
-          echo "TF_VAR_DB_MASTER_NAME=${{ secrets.PROD_TF_VAR_DB_MASTER_NAME }}" >> .env
-          echo "TF_VAR_DB_MASTER_PASS=${{ secrets.PROD_TF_VAR_DB_MASTER_PASS }}" >> .env
           echo "TF_VAR_APP_KEY=${{ secrets.PROD_TF_VAR_APP_KEY }}" >> .env
 
       - name: Checkout
