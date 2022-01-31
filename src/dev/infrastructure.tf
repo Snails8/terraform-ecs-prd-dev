@@ -3,7 +3,7 @@
 # ========================================================
 module "network" {
   source    = "../_module/network"
-  app_name = var.APP_NAME
+  app_name = var.app_name
   azs      = var.azs
 }
 
@@ -12,7 +12,7 @@ module "network" {
 # ========================================================
 module "security_group" {
   source               = "../_module/security_group/laravel_backend"
-  app_name             = var.APP_NAME
+  app_name             = var.app_name
   vpc_cidr             = var.vpc_cidr
   vpc_id               = module.network.vpc_id
   private_route_table  = module.network.route_table_private
@@ -25,7 +25,7 @@ module "security_group" {
 # ==========================================================
 #module "acm" {
 #  source   = "../_module/acm"
-#  app_name = var.APP_NAME
+#  app_name = var.app_name
 #  zone     = var.zone
 #  domain   = var.domain
 #}
@@ -36,15 +36,15 @@ module "security_group" {
 # ==========================================================
 module "iam" {
   source   = "../_module/iam"
-  app_name = var.APP_NAME
+  app_name = var.app_name
 }
 
 # GithubのOICDで使用
-#module "github_iam" {
-#  source = "../_module/iam/github_oidc"
-#  system      = var.APP_NAME
-#  github_repo = "Snails8d/laravel-api"
-#}
+module "github_iam" {
+  source = "../_module/iam/github_oidc"
+  system      = var.app_name
+  github_repo = "Snails8d/laravel-api"
+}
 
 # ========================================================
 # RDS (PostgreSQL)
@@ -52,7 +52,7 @@ module "iam" {
 module "rds" {
   source = "../_module/rds"
 
-  app_name           = var.APP_NAME
+  app_name           = var.app_name
   vpc_id             = module.network.vpc_id
   db_sg_id           = module.security_group.db_sg_id
   private_subnet_ids = module.network.private_subnet_ids
@@ -68,7 +68,7 @@ module "rds" {
 #module "rds" {
 #  source = "../_module/aurora"
 #
-#  app_name           = var.APP_NAME
+#  app_name           = var.app_name
 #  vpc_id             = module.network.vpc_id
 #  db_sg_id           = module.security_group.db_sg_id
 #  private_subnet_ids = module.network.private_subnet_ids
@@ -84,7 +84,7 @@ module "rds" {
 # ========================================================
 module "elasticache" {
   source             = "../_module/elasticache"
-  app_name           = var.APP_NAME
+  app_name           = var.app_name
   vpc_id             = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
   redis_sg_id        = module.security_group.redis_ecs_sg_id

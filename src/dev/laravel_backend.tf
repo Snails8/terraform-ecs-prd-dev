@@ -3,7 +3,7 @@
 # ========================================================
 module "ec2" {
   source             = "../_module/ec2"
-  app_name           = var.APP_NAME
+  app_name           = var.app_name
   vpc_id             = module.network.vpc_id
   public_subnet_id   = module.network.public_subnet_ids[0]
 
@@ -17,7 +17,7 @@ module "ec2" {
 # ==========================================================
 module "alb" {
   source            = "../_module/alb/https"
-  app_name          = var.APP_NAME
+  app_name          = var.app_name
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   alb_sg            = module.security_group.alb_http_sg_id
@@ -25,7 +25,7 @@ module "alb" {
 
   domain = var.domain
   zone   = var.zone
-  acm_id = module.acm.acm_id
+#  acm_id = module.acm.acm_id
 }
 
 # ==========================================================
@@ -33,7 +33,7 @@ module "alb" {
 # ==========================================================
 module "ecs_cluster" {
   source   = "../_module/ecs/cluster"
-  app_name = var.APP_NAME
+  app_name = var.app_name
 }
 
 # ========================================================
@@ -41,14 +41,14 @@ module "ecs_cluster" {
 # ========================================================
 module "ecs" {
   source             = "../_module/ecs/laravel_backend/app"
-  app_name           = var.APP_NAME
+  app_name           = var.app_name
   vpc_id             = module.network.vpc_id
   private_subnet_ids = module.network.private_subnet_ids
 
   cluster_name                = module.ecs_cluster.cluster_name
   target_group_arn            = module.alb.aws_lb_target_group           # alb の設定
   iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn   # ECS のtask に関連付けるIAM の設定
-  app_key                     = var.APP_KEY
+  app_key                     = data.aws_ssm_parameter.app_key.value
   entry_container_port        = 80
 
 #  loki_user = var.LOKI_USER    使うほどではない
@@ -68,7 +68,7 @@ module "ecs" {
 # ========================================================
 module "ecs_worker" {
   source               = "../_module/ecs/laravel_backend/worker"
-  app_name             = var.APP_NAME
+  app_name             = var.app_name
   vpc_id               = module.network.vpc_id
   placement_subnet     = module.network.private_subnet_ids
 
@@ -93,7 +93,7 @@ module "ecs_worker" {
 # ========================================================
 module "ecs_batch" {
   source               = "../_module/ecs/laravel_backend/worker"
-  app_name             = var.APP_NAME
+  app_name             = var.app_name
   vpc_id               = module.network.vpc_id
   placement_subnet     = module.network.private_subnet_ids
 
@@ -119,6 +119,6 @@ module "ecs_batch" {
 # ========================================================
 # module "cloudmap" {
 #  source = "../_module/cloudmap"
-#  app_name = var.APP_NAME
+#  app_name = var.app_name
 #  vpc_id   = module.network.vpc_id
 #}
