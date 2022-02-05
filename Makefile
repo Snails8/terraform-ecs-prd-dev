@@ -4,7 +4,7 @@ SRC := $1
 # the input device is not a TTY 対策で -T (TTYの割当を無効にすることで解決できる)
 DC := docker-compose exec -T terraform
 ENV_FILE := .env
-ENV_GITHUB := .env.github
+ENV_GITHUB := ./src/$(SRC)/.env.github
 TF_STATE_BUCKET := tfstate-snails8d
 
 # ==========================================================
@@ -17,16 +17,15 @@ ifdef SRC
 ENV=${SRC}
 endif
 
-SET_ENV := export ENV=$(ENV) ;\
-           export COMPOSE_PATH_SEPARATOR=: ;\
-           export COMPOSE_FILE=docker-compose.$(ENV).yml
+SET_ENV :=  COMPOSE_FILE=docker-compose.$(ENV).yml
 # ==========================================================
 # make コマンド (SRC=prod が必要な場合のみoption で加える)
 
 
 # ymlに値を渡すために.envをセット
-up:
-	docker-compose up -d --build
+up: pre
+	${SET_ENV} docker-compose up -d --build && \
+	echo "---------------env :${ENV}!!!----------------------"
 
 terraform:
 	docker-compose exec terraform /bin/ash
