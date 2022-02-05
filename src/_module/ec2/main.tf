@@ -63,8 +63,9 @@ data "aws_ami" "recent_amazon_linux2" {
 
 resource "aws_instance" "main" {
   ami           = data.aws_ami.recent_amazon_linux2.image_id
-  instance_type = var.instance_type  # freeでいきたい場合 t2.micro
-  key_name      = aws_key_pair.main.id
+  instance_type = var.instance_type      # freeでいきたい場合 t2.micro
+  key_name      = var.ec2_key_file_path  # Ci/ CD でいくために先にec2側に上げている app_name-dev
+  #  key_name      = aws_key_pair.main.id
   subnet_id     = var.public_subnet_id
   vpc_security_group_ids = [var.ssh_sg_id]
 
@@ -92,10 +93,10 @@ resource "aws_instance" "main" {
 # ==================================================================
 # SSHKey (ssh-keygen -t rsa で発行したpub-key を指定)
 # ==================================================================
-resource "aws_key_pair" "main" {
-  key_name   = "${var.app_name}-ec2-key"
-  public_key = file(var.ec2_key_file_path)
-}
+#resource "aws_key_pair" "main" {
+#  key_name   = "${var.app_name}-ec2-key"
+#  public_key = file(var.ec2_key_file_path)
+#}
 
 # EIP (ElasticIP)
 resource "aws_eip" "main" {

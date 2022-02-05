@@ -131,7 +131,7 @@ locals {
     secrets = [
       {
         name      = "APP_KEY",
-        valueFrom = "${var.app_name}/TF_VAR_APP_KEY"
+        valueFrom = "${var.app_name}/APP_KEY"
       },
       {
         name      = "REDIS_HOST",
@@ -143,15 +143,15 @@ locals {
       },
       {
         name      = "DB_DATABASE",
-        valueFrom = "${var.app_name}/TF_VAR_DB_NAME"
+        valueFrom = "${var.app_name}/DB_NAME"
       },
       {
         name      = "DB_USERNAME",
-        valueFrom = "${var.app_name}/TF_VAR_DB_MASTER_NAME"
+        valueFrom = "${var.app_name}/DB_MASTER_NAME"
       },
       {
         name      = "DB_PASSWORD",
-        valueFrom = "${var.app_name}/TF_VAR_DB_MASTER_PASS"
+        valueFrom = "${var.app_name}/DB_MASTER_PASS"
       }
     ]
 

@@ -7,7 +7,7 @@ on:
 env:
   # please set your own app name corresponding with application name.
   # APP_NAME: ${{ github.event.repository.name }}
-  APP_NAME: housebokan
+  APP_NAME: laravel-api
 
 jobs:
   Setup:
@@ -24,16 +24,8 @@ jobs:
       run:
         shell: bash
         working-directory: "./src/prod"
-    steps:
-      - name: Create .env file
-      - shell: bash
-        run: |
-          touch .env
-          echo "TF_VAR_DB_NAME=${{ secrets.PROD_TF_VAR_DB_NAME }}" >> .env
-          echo "TF_VAR_DB_MASTER_NAME=${{ secrets.PROD_TF_VAR_DB_MASTER_NAME }}" >> .env
-          echo "TF_VAR_DB_MASTER_PASS=${{ secrets.PROD_TF_VAR_DB_MASTER_PASS }}" >> .env
-          echo "TF_VAR_APP_KEY=${{ secrets.PROD_TF_VAR_APP_KEY }}" >> .env
 
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
 

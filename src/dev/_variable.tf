@@ -1,5 +1,6 @@
-variable "APP_NAME" {
-  type = string
+variable "app_name" {
+  default = "laravel-api"
+  type    = string
 }
 
 # AZ の設定(冗長化のため配列でlist化してある)
@@ -24,22 +25,39 @@ variable "zone" {
   default = "snails8.site"
 }
 
-variable "APP_KEY" {
-  type = string
+data "aws_ssm_parameter" "app_key" {
+  name = "/${var.app_name}/APP_KEY"
 }
 
-# RDS で使用
-variable "DB_NAME" {
-  type = string
+# SSM から取得
+data "aws_ssm_parameter" "db_username" {
+  name = "/${var.app_name}/DB_MASTER_NAME"
 }
 
-variable "DB_MASTER_NAME" {
-  type = string
+data "aws_ssm_parameter" "db_pass" {
+  name = "/${var.app_name}/DB_MASTER_PASS"
 }
 
-variable "DB_MASTER_PASS" {
-  type = string
+data "aws_ssm_parameter" "db_name" {
+  name = "/${var.app_name}/DB_NAME"
 }
+
+#variable "APP_KEY" {
+#  type = string
+#}
+
+# RDS で使用。.env に仕込むならこれ
+#variable "DB_NAME" {
+#  type = string
+#}
+#
+#variable "DB_MASTER_NAME" {
+#  type = string
+#}
+#
+#variable "DB_MASTER_PASS" {
+#  type = string
+#}
 
 # 以下固定化し共有するときに使用
 #variable "app_name" {

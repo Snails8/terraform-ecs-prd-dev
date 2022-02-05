@@ -23,9 +23,9 @@ variable "target_group_port" {
 }
 
 # listener rule httpsで使用
-variable "acm_id" {
-  type = string
-}
+#variable "acm_id" {
+#  type = string
+#}
 
 variable "alb_sg" {
   description = "HTTP access security group"
