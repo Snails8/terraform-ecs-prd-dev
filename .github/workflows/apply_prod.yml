@@ -1,4 +1,4 @@
-name: dev-apply
+name: prod-apply
 
 on:
   push:

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - test-development
-      #- staging (名前は変えてください)
 env:
   # please set your own app name corresponding with application name.
   # APP_NAME: ${{ github.event.repository.name }}
