@@ -69,7 +69,7 @@
 #  target_group_arn            = module.front_alb.aws_lb_target_group    # alb の設定
 #  iam_role_task_execution_arn = module.iam.iam_role_task_execution_arn  # ECS のtask に関連付けるIAM の設定
 #  entry_container_port        = 3000  # task定義とECSのALB設定に渡すport
-#  task_path                   = "../_module/ecs/frontend/json/next_container_definitions.json"
+#  task_path                   = "./json/next_container_definitions.json"
 #
 #  sg_list = [
 #    module.frontend_sg.frontend__alb_sg_id,  # front 用の ALBの設定(nginxとの通信はしないのでecsの設定は不要)
